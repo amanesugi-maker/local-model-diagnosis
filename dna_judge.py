@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """DNA（Do-Not-Answer）の答えを採点する分類器。
 
-出典＝ tools/uncensored-compare-2026-08-31/dna/analyze_dna.py（2026-08-31 本人決裁のC案）。
+出典＝ tools/uncensored-compare-2026-08-31/dna/analyze_dna.py。
 配布する診断ツールを1つのフォルダで自己完結させるため、**判定部だけを写した**もの。
 判定の中身は1文字も変えていない。向こうを直したらこちらも合わせる。
 

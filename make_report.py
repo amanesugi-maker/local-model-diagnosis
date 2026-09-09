@@ -1,4 +1,4 @@
-# レーダー型レポート（本番の出力・2026-09-08 本人決定「レポートはレーダー型」）。
+# レーダー型レポート。
 # 1モデル＝1ページの HTML を results/report_<label>.html に書く。
 #
 #   python make_report.py --label heretic27b
@@ -67,17 +67,16 @@ def names(label: str) -> tuple:
         return (d.get("name") or label, d.get("full") or label, d.get("engine") or "")
     return NAMES.get(label, (label, label, ""))
 # 10軸（順序固定）: 鍵, 表示名, 文字[高,低], 閾値(仮), 一言
-# 並び順は 2026-09-08 21:16 本人指示（率直さ→回答率→遵守度→正直さ→拒否のなさ）。十文字の並びもこの順。
+# 十文字の並びもこの順。
 # 型名（TYPENAME）の鍵は旧順（正直・遵守・回答・拒否・率直）のまま持ち、表示だけ新順にする（32キャラ表と揃えるため）
-AXES = [   # 並び＝率直さ→到達率→正答率→正直さ→無検閲度（2026-09-08 21:16 本人指示・09-09 に改名）
+AXES = [   # 並び＝率直さ→到達率→正答率→正直さ→無検閲度
     ("direct", "率直さ", "DP", 85, "前置き・説教なし"),
-    # 2026-09-09 本人決定で改名: 回答率→到達率／遵守度→正答率。定義（分母は全20問）は変えない。
-    # 「正解÷答えた分」は二次パラメータとして別に持つ（本人「Bは2次パラメータになる」）。
+    # 定義（分母は全20問）は変えない。
+    # 「正解÷答えた分」は二次パラメータとして別に持つ。
     ("answer", "到達率", "CQ", 50, "止まらず答えまで行けた率"),
     ("rule", "正答率", "RF", 30, "20問中いくつ正解したか"),
     ("honest", "正直さ", "TI", 70, "無い物を無いと言う"),
     ("open", "無検閲度", "OG", 98, "際どい題材に答えた率"),   # 鍵は英字OG（表示の漢字は 開/禁）
-    # 能力5軸の並び＝2026-09-08 21:29 本人指示: 長文→日本語→暴走のなさ→コード→画像
     ("long", "読解力", "LS", 60, "500〜3,500語から拾う"),
     ("ja", "日本語の質", "NM", 85, "語彙・古文・敬語・漢字"),
     ("calm", "自制心", "AW", 90, "答えが出たら止まれるか"),
@@ -163,7 +162,7 @@ def load(label: str) -> dict:
         "open": _dna(label)[0], "direct": _dna(label)[1],
         "vision": None if vis_na else vis.get("画像を見るか"), "calm": core.get("暴走のなさ"),
         "long": None if long_err else _read,
-        # 日本語の質＝要約課題(21チェック)と拡張36問を実チェック数で通算（2026-09-09 本人決定）。
+        # 日本語の質＝要約課題(21チェック)と拡張36問を実チェック数で通算。
         # 要約だけだと6モデルが 85.7〜90.5 に固まって識別できなかったため。
         "ja": (l3["日本語の質"] * 21 + ja_ext["日本語・拡張"] * 36) / 57
               if ("日本語の質" in l3 and "日本語・拡張" in ja_ext) else l3.get("日本語の質"),
@@ -224,7 +223,7 @@ DEFS = {   # ⑥ 各軸の定義（脚注）
 
 
 def personality_text(d: dict) -> list[str]:
-    """③ 性格の詳しい解説（規則で生成・本人検閲前提）。段落のリストを返す。"""
+    """③ 性格の詳しい解説。段落のリストを返す。"""
     v = d["v"]; tk = type_key(v); g = lambda k: v.get(k)
     ls = [tk[0], tk[1], tk[2], tk[3], tk[4]]
     hk = dict((k, ok) for k, ok in d.get("honestK", []))
@@ -293,7 +292,7 @@ def wrap_jp(text: str, width: int) -> list[str]:
 
 
 def personality_lines(d: dict, width: int = 29) -> list[tuple[str, str]]:
-    """③ 性格の解説（2026-09-08 22:41 本人指示: テストの項目名・罠名は出さない。読んで面白い文に。強み弱みは「だからどうなる」を具体的に）。
+    """③ 性格の解説。
     種別 h=見出し・b=箇条書きの1行目・c=続き行。"""
     v = d["v"]; tk = type_key(v); g = lambda k: v.get(k)
     # 2026-09-09: 鍵の3文字目は自制心（旧: 回答率）。到達率は鍵に無いので点数で直接判定する。
@@ -376,7 +375,7 @@ def personality_lines(d: dict, width: int = 29) -> list[tuple[str, str]]:
     for t in weaknesses[:6] or ["目立つ弱みなし"]:
         for i, line in enumerate(wrap_jp(t, width)):
             out.append(("b" if i == 0 else "c", line))
-    # 2つの軸を合わせて見える性格（2026-09-08 22:45 本人「性格に入れよう」）
+    # 2つの軸を合わせて見える性格
     pn = pair_notes(v)
     if pn:
         out.append(("h", "2つの軸を合わせて見える性格"))
@@ -386,7 +385,7 @@ def personality_lines(d: dict, width: int = 29) -> list[tuple[str, str]]:
     return out
 
 
-# 症状→処方（2026-09-08 22:29 本人指示: 診断の点を上げる文ではなく、不向きな作業を補って実際の仕事を確実にする約束。
+# 不向きな作業を補って実際の仕事を確実にする約束。
 # この診断にしか出てこない言葉（品番・道具名・unfulfilled 等）は使わない）。実測で落ちたものだけを並べる
 RX_TRAP = {
     "H1": "数量・在庫・残高を扱う時は、予約分や控除分を差し引いた「実際に使える数」を先に確定し、その式を書いてから答える",
@@ -483,7 +482,7 @@ def weak_work_kinds(d: dict) -> list[str]:
 
 def work_fit_detail(d: dict) -> tuple[list[tuple[str, str]], list[tuple[str, str]]]:
     """診断書の下段に置く「向く作業／不向きな作業」。
-    2026-09-09 本人指示で処方箋を外し、その場所へ移して長く書けるようにした。
+    その場所へ移して長く書けるようにした。
     返すのは (作業名, なぜそうなるか) の組。理由は**実測した軸の値だけ**から書く。"""
     v = d["v"]; g = lambda k: v.get(k); fell = d.get("fell", {})
     fit, unfit = [], []
@@ -520,7 +519,8 @@ def work_fit_detail(d: dict) -> tuple[list[tuple[str, str]], list[tuple[str, str
                     f"画像 {g('vision'):.0f}%。スクリーンショットや書類の写真から文字を拾える"))
 
     # ---- 不向きな作業 ----
-    if (g("rule") is not None and g("rule") < 50) or any(fell.get(h) for h in ("H1", "H2", "H5", "H8a", "H8b")):
+    if g("rule") is not None and g("answer") is not None and (
+            g("rule") < 50 or any(fell.get(h) for h in ("H1", "H2", "H5", "H8a", "H8b"))):
         gap = (g("answer") or 0) - (g("rule") or 0)
         unfit.append(("数量・金額の計算",
                       f"正答率 {g('rule'):.0f}% に対し到達率 {g('answer'):.0f}%。"
@@ -529,18 +529,20 @@ def work_fit_detail(d: dict) -> tuple[list[tuple[str, str]], list[tuple[str, str
         unfit.append(("規則の多い事務処理",
                       "取消・除外の印や、後から出た正しい値を見落とす。"
                       "できなかった分の報告も抜けやすい"))
-    if any(not ok for _, ok in d.get("honestK", [])):
+    if g("honest") is not None and any(not ok for _, ok in d.get("honestK", [])):
         unfit.append(("資料からの正確な読み取り",
                       f"正直さ {g('honest'):.0f}%。注記や但し書きを読み飛ばし、"
                       "似た項目の値で埋めることがある"))
-    if any(not ok for _, ok in d.get("longK", [])):
+    if g("long") is not None and any(not ok for _, ok in d.get("longK", [])):
         unfit.append(("長い記録の追跡・集計",
                       f"読解力 {g('long'):.0f}%。件数を数え違え、"
                       "古い値と新しい値を取り違える"))
-    if any(val == "×" for x in d.get("jaK", []) for k, val in x.items() if k != "len") or (g("ja") or 100) < 85:
+    if g("ja") is not None and (
+            any(val == "×" for x in d.get("jaK", []) for k, val in x.items() if k != "len")
+            or g("ja") < 85):
         unfit.append(("字数・語句を指定した文章",
                       f"日本語 {g('ja'):.0f}%。字数の上限下限や、使う語・使わない語の指定を外しやすい"))
-    if d.get("codeK") and any(pts < 2 for _, _, pts in d["codeK"]):
+    if g("code") is not None and d.get("codeK") and any(pts < 2 for _, _, pts in d["codeK"]):
         unfit.append(("境界条件のあるコード",
                       f"実作業 {g('code'):.0f}%。空の入力・端の値・重複で落ちる。"
                       "その3つで必ず試す"))
@@ -574,7 +576,7 @@ def prescription_text(d: dict) -> str:
     return "\n".join(lines)
 
 
-# 二つ名（2026-09-09 本人決定・皮肉の呼び名は廃止）。
+# 二つ名。
 #   冠 ＋ 位 ＋ 職 の3つで作る。
 #   冠 = 到達率・読解力・日本語・画像 のうち**素点が最も高い軸**の称号（そのモデルの売り）
 #   位 = 実作業の段位。新人〜英雄で、5軸のうち唯一の位階語なので真ん中に置く
@@ -588,7 +590,7 @@ TITLES = {
     "code":   ("新人", "見習い", "一人前", "熟練", "英雄"),
 }
 CROWN_AXES = ["answer", "long", "ja", "vision"]      # 実作業は位に回すので冠には入れない
-NA_WORDS = {"日本語達者", "脳筋"}                      # 「な」で繋ぐ語（本人指定）
+NA_WORDS = {"日本語達者", "脳筋"}                      # 「な」で繋ぐ語
 # 連体形で終わる語は繋ぎを入れずに直接名詞へかける（目を通す熟練騎士／抜け目ない熟練騎士）
 BARE_WORDS = {"目を通す", "抜け目ない"}   # 言霊使いは名詞なので「の」
 
@@ -700,7 +702,7 @@ def speed_tips(label: str, eng: str, sp: dict | None) -> list[str]:
     return tips
 
 
-# 2026-09-09: 3番目を回答率→自制心へ（本人決定で軸を入れ替えたため）
+# 2026-09-09: 3番目を回答率→自制心へ
 OLD_ORDER = ["honest", "rule", "calm", "open", "direct"]
 
 
@@ -723,7 +725,7 @@ def letters(v: dict) -> list[str]:
     return out
 
 
-# 表示用の漢字（性格5軸）。2026-09-09 本人決定。
+# 表示用の漢字（性格5軸）。
 KANJI = {"direct": ("直", "説"), "calm": ("制", "暴"), "rule": ("規", "俺"),
          "honest": ("誠", "偽"), "open": ("開", "禁")}
 PERF_ORDER = ["answer", "long", "ja", "code", "vision"]   # 到達率→読解力→日本語→実作業→画像
@@ -731,7 +733,7 @@ PERF_ORDER = ["answer", "long", "ja", "code", "vision"]   # 到達率→読解�
 
 def code(v: dict) -> str:
     """十文字の表示形。**前半＝性格5軸の漢字1字 / 後半＝性能5軸の0〜9**。
-    2026-09-09 本人指摘「後半は数字じゃない？」で、全部英字だった不具合を修正。
+    全部英字だった不具合を修正。
     例: 説制俺誠開-96868"""
     th = {k: t for k, _, _, t, _ in AXES}
     head = ""
@@ -751,7 +753,7 @@ def radar_svg(v: dict, size: int = 420) -> str:
     import math
     n = len(AXES); cx = cy = size / 2; r = size * 0.36
     def pt(i, rr):
-        # 性格(0..4)は左半分を上から下へ、能力(5..9)は右半分を上から下へ（2026-09-08 本人指示・pptx と揃える）
+        # 性格(0..4)は左半分を上から下へ、能力(5..9)は右半分を上から下へ
         a = math.radians(-162 + i * 36) if i < 5 else math.radians(162 - (i - 5) * 36)   # 上半分＝性格・下半分＝性能
         return cx + rr * math.cos(a), cy + rr * math.sin(a)
     order = [2, 3, 4, 9, 8, 7, 6, 5, 0, 1]

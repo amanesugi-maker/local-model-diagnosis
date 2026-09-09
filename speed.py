@@ -1,4 +1,4 @@
-# 速度のスペック測定（⑤・2026-09-08 本人決裁「速度は総合に入れないが表示する」）。
+# 速度のスペック測定。
 # 同じ PC 内での比較用。results/speed_<label>.json に保存し、make_report.py のスペック欄が読む。
 #
 #   python speed.py --port 8081 --label heretic27b --model heretic-q4-mtp

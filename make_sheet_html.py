@@ -1,5 +1,4 @@
 # 診断書（A4 1枚）を**パワポと同じ座標のまま** HTML にする。
-#   2026-09-09 本人「PPTで作ったやつがそっくりそのまま出てくれればいいんだけど」
 #
 # 作り: make_pptx.py の build() が使っている inch 座標をそのまま CSS へ移す。
 #   用紙 7.5 × 10 in。1インチ ＝ --u（親の幅の 1/7.5）なので、
@@ -23,7 +22,7 @@ import make_report as M            # noqa: E402
 import sheet_layout as P           # noqa: E402  版面の定義（パワポと共有）
 
 WEB = os.path.join(HERE, "web")
-# 2026-09-09 本人指示「天音の背景消して」。32職の絵が出来たら True に戻す。
+# 32職の絵が出来たら True に戻す。
 WATERMARK = False
 E = html.escape
 

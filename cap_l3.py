@@ -1,4 +1,4 @@
-# L3 課題（2026-09-07 本人決裁: 罠8つ全部入り）。設計書 = L3設計_2026-09-07.md
+# L3 課題。設計書 = L3設計_2026-09-07.md
 #
 # L1（cap_agentic_fable.py / cap_core.py）は一切触らない。ここに L3 版の生成器・偽ツール・採点を足す。
 # 結果ファイルは L1 と別（results\l3_<label>.json）。台帳でも別列にする。
@@ -41,7 +41,7 @@ MODEL_NAME = "x"
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
-# 処方箋の再測定用（2026-09-08 23:26 本人「処方箋を入れて改善具合を見たい」）。
+# 処方箋の再測定用。
 # 環境変数 LLMBENCH_SYSTEM_FILE に UTF-8 のファイルを渡すと、その中身を system メッセージとして全課題に付ける。無ければ従来どおり設定文なし。
 _sf = os.environ.get("LLMBENCH_SYSTEM_FILE")
 SYSTEM_PROMPT = open(_sf, encoding="utf-8").read().strip() if _sf and os.path.exists(_sf) else ""
@@ -58,7 +58,7 @@ def with_system(messages: list) -> list:
     return ([{"role": "system", "content": SYSTEM_PROMPT}] + messages) if SYSTEM_PROMPT else messages
 
 
-USAGE = {"prompt_tokens": 0, "completion_tokens": 0, "requests": 0, "sec": 0.0}   # 本人「かかった時間とトークン」（2026-09-08 23:27）
+USAGE = {"prompt_tokens": 0, "completion_tokens": 0, "requests": 0, "sec": 0.0}   #
 
 
 def add_usage(j: dict, sec: float) -> None:
@@ -417,7 +417,7 @@ def run_agentic_task(port: int, t: dict, max_rounds: int = 30) -> dict:
             if fn == "calc":
                 calc_log.append((str(args.get("expr", ""))[:60], out[:30]))
             msgs.append({"role": "tool", "tool_call_id": tc.get("id") or "c0", "content": out})
-            # 暴走の早期判定（2026-09-07 23:40 本人指示）: 同じ呼び出し3回、または呼び出し合計30回で打ち切り。
+            # 暴走の早期判定: 同じ呼び出し3回、または呼び出し合計30回で打ち切り。
             # 正しく解けば12回。30回は2.5倍の余裕なので、正当な解き手を切ることはない。
             key = fn + ":" + json.dumps(args, sort_keys=True, ensure_ascii=False)
             same[key] = same.get(key, 0) + 1
@@ -500,7 +500,7 @@ def run_honesty(port: int, r: random.Random) -> dict:
 
 
 # ================================================================== 長文の読み取り L3
-# 2026-09-09 本人指示で段階式へ。「全部同じ語数である必要はない。段階的に上げていけばいい。
+# 「全部同じ語数である必要はない。段階的に上げていけばいい。
 # トータルの語数は今までと同じに」。旧＝4,000語×2本＝8,000語／8問。
 # 新＝500/1,500/2,500/3,500語の4本＝8,000語／16問。**総語数が同じなので所要時間は増えない**。
 # 狙い: いまは6モデル全員が同じ4,000語で同じ失敗をしていた（8問中7問が全員同じ答え）。

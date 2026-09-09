@@ -45,6 +45,22 @@ def models(host: str, port: int, timeout: int = 10) -> list:
         return [m["id"] for m in json.load(r).get("data", [])]
 
 
+# つながらなかったときに探す番号。よく使われている順。
+KNOWN_PORTS = [8080, 8081, 8082, 11434, 1234, 5000, 1950, 1970, 1980, 8000]
+
+
+def scan(host: str) -> list:
+    """よくある番号を順に叩いて、返事のあったものを返す。"""
+    found = []
+    for p in KNOWN_PORTS:
+        try:
+            ids = models(host, p, timeout=2)
+        except Exception:
+            continue
+        found.append((p, len(ids)))
+    return found
+
+
 def _menu(ids: list, head: str) -> None:
     """番号つきで並べる。利用者は番号か、名前の一部を答えれば足りる。"""
     say(head)
@@ -59,8 +75,17 @@ def pick(host: str, port: int, want: str | None) -> str:
         ids = models(host, port)
     except urllib.error.URLError as e:
         say(f"× {host}:{port} に届きません — {e.reason}")
-        say("  モデルを起動しているか、ポート番号を確かめてください。")
-        say("  よくある番号: llama.cpp 8080 ／ Ollama 11434 ／ LM Studio 1234")
+        found = scan(host)
+        if found:
+            say("")
+            say("  代わりに、こちらでは返事がありました:")
+            for p, n in found:
+                say(f"    --port {p}   （{n}本 載っている）")
+            say("")
+            say(f"  例: python 診断.py --port {found[0][0]}")
+        else:
+            say("  モデルを起動しているか、ポート番号を確かめてください。")
+            say("  よくある番号: llama.cpp 8080 ／ Ollama 11434 ／ LM Studio 1234")
         raise SystemExit(2)
     if not ids:
         say("× モデルが1つも載っていません。先にモデルを読み込ませてください。")

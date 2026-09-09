@@ -45,6 +45,15 @@ def models(host: str, port: int, timeout: int = 10) -> list:
         return [m["id"] for m in json.load(r).get("data", [])]
 
 
+def _menu(ids: list, head: str) -> None:
+    """番号つきで並べる。利用者は番号か、名前の一部を答えれば足りる。"""
+    say(head)
+    for k, i in enumerate(ids, start=1):
+        say(f"  {k:2}. {i}")
+    say("")
+    say("  --model に**番号**か**名前の一部**を渡してください（例: --model 3 ／ --model heretic）")
+
+
 def pick(host: str, port: int, want: str | None) -> str:
     try:
         ids = models(host, port)
@@ -57,14 +66,21 @@ def pick(host: str, port: int, want: str | None) -> str:
         say("× モデルが1つも載っていません。先にモデルを読み込ませてください。")
         raise SystemExit(2)
     if want:
-        if want not in ids:
-            say(f"× {want} は見つかりません。載っているのは: {', '.join(ids)}")
-            raise SystemExit(2)
-        return want
+        if want in ids:
+            return want
+        if want.isdigit() and 1 <= int(want) <= len(ids):     # 番号で選ぶ
+            return ids[int(want) - 1]
+        hit = [i for i in ids if want.lower() in i.lower()]   # 名前の一部で選ぶ
+        if len(hit) == 1:
+            say(f"「{want}」→ {hit[0]}")
+            return hit[0]
+        if not hit:
+            _menu(ids, f"×「{want}」に当たるモデルがありません。載っているのは:")
+        else:
+            _menu(hit, f"「{want}」に当たるモデルが{len(hit)}本あります。1つに絞ってください:")
+        raise SystemExit(2)
     if len(ids) > 1:
-        say("この口には複数のモデルが載っています。--model でどれか1つを指定してください:")
-        for i in ids:
-            say("  " + i)
+        _menu(ids, "この口には複数のモデルが載っています。どれを測るか選んでください:")
         raise SystemExit(2)
     return ids[0]
 

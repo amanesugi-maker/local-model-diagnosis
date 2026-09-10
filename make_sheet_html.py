@@ -23,7 +23,7 @@ import sheet_layout as P           # noqa: E402  版面の定義（パワポと�
 
 WEB = os.path.join(HERE, "web")
 # 32職の絵が出来たら True に戻す。
-WATERMARK = False
+WATERMARK = True     # 2026-09-10 段位×職の合成絵（色付き）が揃ったので戻した（rank_art.py が引く）
 E = html.escape
 
 # ---- パワポと同じ色 ----
@@ -48,6 +48,26 @@ def box(x, y, w, h=None, extra="") -> str:
     if h is not None:
         s += f";height:{px(h)}"
     return s + (";" + extra if extra else "")
+
+
+ART_VEIL = 0.45      # 背景に掛ける白の割合（0=そのまま・1=真っ白）。多角形を主役にするため
+
+
+def art_data_uri(v: dict, total_rank: str | None, size_px: int = 620) -> str | None:
+    """段位×職の合成絵を data URI にする。無ければ従来の透かしへ。"""
+    import rank_art
+    src = rank_art.art_path(v, total_rank)
+    if not src:
+        return None
+    from PIL import Image
+    im = Image.open(src).convert("RGB")
+    w, h = im.size
+    s0 = min(w, h)
+    im = im.crop(((w - s0) // 2, (h - s0) // 2, (w - s0) // 2 + s0, (h - s0) // 2 + s0)).resize((size_px, size_px))
+    im = Image.blend(im, Image.new("RGB", im.size, (255, 255, 255)), ART_VEIL)
+    buf = io.BytesIO()
+    im.save(buf, format="JPEG", quality=82, optimize=True)
+    return "data:image/jpeg;base64," + base64.b64encode(buf.getvalue()).decode()
 
 
 def watermark_data_uri(name: str, size_px: int = 620) -> str | None:
@@ -78,9 +98,10 @@ def radar_svg(v: dict, ls: list, x: float, y: float, size: float, wm: str | None
     cx = cy = size / 2
     r = size * 0.33
     S = 100.0                                   # SVG の内部単位 = 1/100 inch
-    GRID, GRID2 = "#FFFFFF", "#FFFFFF"          # 透かしを敷くので白（パワポの dark 経路と同じ）
-    LBL, FILL = "#FFE066", "#FFEE58"
-    if not wm:
+    # 2026-09-10 絵は白ベールで薄いので、目盛り線と文字は濃い色・文字は白の縁取り（下の <style>）。多角形は黄で主役
+    GRID, GRID2 = "#2F3A44", "#2F3A44"
+    LBL, FILL = "#1F1B14", "#FFD400"
+    if wm is None:
         GRID, GRID2, LBL, FILL = "#C8CFD6", "#E3E7EB", "#151A1F", "#00959A"
 
     def ang(i):
@@ -92,23 +113,25 @@ def radar_svg(v: dict, ls: list, x: float, y: float, size: float, wm: str | None
 
     order = [2, 3, 4, 9, 8, 7, 6, 5, 0, 1]
     out = [f'<svg class="radar" viewBox="0 0 {size*S:.0f} {size*S:.0f}" aria-hidden="true">']
-    if wm:
-        out.append(f'<image href="{wm}" x="0" y="0" width="{size*S:.0f}" height="{size*S:.0f}"/>')
+    if wm is not None:
+        out.append(f'<image class="art" href="{wm}" x="0" y="0" width="{size*S:.0f}" height="{size*S:.0f}"/>')
+        out.append('<style>text{paint-order:stroke;stroke:#FFFFFF;stroke-width:3px;stroke-linejoin:round}</style>')
+        out.append('<rect class="veil" x="0" y="0" width="100%" height="100%" fill="#FFFFFF" fill-opacity="0"/>')
     for f in (0.2, 0.4, 0.6, 0.8, 1.0):
         pts = " ".join(f"{a:.1f},{b:.1f}" for a, b in (pt(i, r * f) for i in order))
-        out.append(f'<polygon points="{pts}" fill="none" stroke="{GRID if f == 1.0 else GRID2}" '
+        out.append(f'<polygon class="grid" points="{pts}" fill="none" stroke="{GRID if f == 1.0 else GRID2}" '
                    f'stroke-width="{2.0 if f == 1.0 else 0.75}" stroke-opacity="{1 if f == 1.0 else .5}"/>')
     for i in range(n):
         ex, ey = pt(i, r)
-        out.append(f'<line x1="{cx*S:.1f}" y1="{cy*S:.1f}" x2="{ex:.1f}" y2="{ey:.1f}" '
+        out.append(f'<line class="grid" x1="{cx*S:.1f}" y1="{cy*S:.1f}" x2="{ex:.1f}" y2="{ey:.1f}" '
                    f'stroke="{GRID2}" stroke-width="0.75" stroke-opacity=".45"/>')
     for f in (0.2, 0.4, 0.6, 0.8, 1.0):
         out.append(f'<text class="tick" x="{cx*S:.1f}" y="{(cy - r*f)*S:.1f}" text-anchor="middle">'
                    f'{int(f*100)}</text>')
     vals = [0 if v.get(k) is None else v[k] / 100 for k, *_ in M.AXES]
     pts = " ".join(f"{a:.1f},{b:.1f}" for a, b in (pt(i, r * vals[i]) for i in order))
-    out.append(f'<polygon points="{pts}" fill="{FILL}" fill-opacity="{.45 if wm else .35}" '
-               f'stroke="{FILL}" stroke-width="{1.5 if wm else 2.25}"/>')
+    out.append(f'<polygon class="val" points="{pts}" fill="{FILL}" fill-opacity="{.65 if wm is not None else .35}" '
+               f'stroke="{"#B38600" if wm is not None else FILL}" stroke-width="{2.5 if wm is not None else 2.25}"/>')
     for i in range(n):
         if v.get(M.AXES[i][0]) is None:
             continue
@@ -118,9 +141,9 @@ def radar_svg(v: dict, ls: list, x: float, y: float, size: float, wm: str | None
     for i, (k, name, *_rest) in enumerate(M.AXES):
         lx, ly = pt(i, r + 0.34)
         val = v.get(k)
-        vcol = LBL if wm else "#00959A"
+        vcol = LBL if wm is not None else "#00959A"
         if val is None:
-            vcol = GRID if wm else "#5F6B76"
+            vcol = GRID if wm is not None else "#5F6B76"
         out.append(f'<text class="lb" x="{lx:.1f}" y="{ly:.1f}" text-anchor="middle" fill="{LBL}">'
                    f'{E(ls[i])}  {E(name)}</text>')
         out.append(f'<text class="lv" x="{lx:.1f}" y="{ly + 12.0:.1f}" text-anchor="middle" fill="{vcol}">'
@@ -182,16 +205,25 @@ def sheet(label: str) -> str:
     T(RX, 1.76, RW, 0.34, E(desc), 7.5, color="var(--muted)")
 
     # ---- レーダー ----
-    a(f'<div class="radarbox" style="{box(0.385, 0.62, 3.78, 3.78)}">'
-      f'{radar_svg(v, ls, 0.385, 0.62, 3.78, watermark_data_uri(nm) if WATERMARK else None)}</div>')
+    # 段位×職の鍵。絵が手元に無い（配布版の利用者）時は href 空の枠だけ出し、サイトが art/<rank>/<job>.jpg を差し込む
+    import rank_art
+    art_key = rank_art.art_key(v, sc.get("rank"))
+    a(f'<div class="radarbox" data-art="{art_key[0] + "/" + art_key[1] if art_key else ""}" style="{box(0.385, 0.62, 3.78, 3.78)}">'
+      f'{radar_svg(v, ls, 0.385, 0.62, 3.78, (art_data_uri(v, sc.get("rank")) or "") if (WATERMARK and art_key) else None)}</div>')
 
     # ---- 性格（本文）----
+    # 行数が多い型では字を自動で縮める
+    PH = 5.36                                   # 本文の高さ（枠 5.55 の内側）
+    plines = list(M.personality_lines(d, width=27))
+    heads = sum(1 for k, _ in plines if k == "h")
+    avail = PH - 0.042 * max(0, heads - 1)      # 見出しの上余白ぶんを引く
+    pfs = min(7.0, avail * 72 / (1.35 * max(1, len(plines))))   # 行高 = 字の大きさ × 1.35
     rows = []
-    for kind, line in M.personality_lines(d, width=29):
+    for kind, line in plines:
         pre = {"h": "", "b": "・", "c": "　"}[kind]
         cls = "h" if kind == "h" else ("b" if kind == "b" else "c")
         rows.append(f'<div class="pl {cls}">{pre}{E(line)}</div>')
-    a(f'<div class="persona" style="{box(RX, 2.28, RW, 5.1)};font-size:{fs(7)}">'
+    a(f'<div class="persona" style="{box(RX, 2.28, RW, PH)};font-size:{fs(pfs)}">'
       + "".join(rows) + "</div>")
 
     # ---- 10軸の表 ----
@@ -241,7 +273,7 @@ def sheet(label: str) -> str:
          "var(--accent)")
     work(8.78, 0.86, "不向きな作業", unfitd[:4] or [("（目立つものなし）", "落ちた軸が無い")],
          "var(--bad)")
-    T(0.1, 9.8, 7.3, 0.17, "Vorice は VRAM を使用しない CPU の音声入力です。", 6,
+    T(0.1, 9.8, 7.3, 0.17, "モデルの動作を邪魔しない、完全CPU処理の音声入力ツール　<a href='https://vorice.pages.dev/' target='_blank' rel='noopener' style='color:inherit;text-decoration:underline'>Vorice</a>　長い日本語プロンプトをキーボードで打つのが面倒な方にお勧めです。", 6,
       color="var(--muted)")
 
     return ('<div class="sheet-fit"><div class="sheet-page">'
@@ -249,12 +281,19 @@ def sheet(label: str) -> str:
 
 
 SHEET_CSS = """
+.radarbox.noart .radar image{display:none}
+.radarbox.noart .radar .grid{stroke:#C8CFD6}
+.radarbox.noart .radar .val{fill:#00959A;fill-opacity:.35;stroke:#00959A;stroke-width:2.25}
+.radarbox.noart .radar text{stroke:none}
+.radarbox.noart .radar text:not(.tick){fill:#151A1F}
+
 .sheet-fit{container-type:inline-size;width:100%;max-width:820px;margin:0 auto}
 .sheet-page{--u:13.3333cqw;--mono:Consolas,"SF Mono",monospace;
   position:relative;width:100%;aspect-ratio:7.5/10;background:var(--paper);
   color:var(--ink);font-family:"Yu Gothic UI","Yu Gothic","Noto Sans JP",sans-serif;
   border:1px solid var(--frame);box-shadow:0 1px 3px rgba(0,0,0,.10);overflow:hidden}
 .sheet-page *{box-sizing:border-box}
+.sheet-page,.sheet-page *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 .sheet-page .t{position:absolute;white-space:pre-wrap}
 .sheet-page .frame{position:absolute;border:0.75px solid var(--frame)}
 .sheet-page .tab{position:absolute;background:var(--accent);color:#fff;font-weight:700;

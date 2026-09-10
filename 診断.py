@@ -220,6 +220,19 @@ def sheet(label: str, out_dir: str) -> str:
     os.makedirs(out_dir, exist_ok=True)
     p = os.path.join(out_dir, f"診断書_{label}.html")
     io.open(p, "w", encoding="utf-8", newline="\n").write(page)
+    # サイトの入力欄に貼るための診断書JSON（描き上がった中身＋段位×職の鍵。答えの本文は入らない）
+    import make_report as M
+    import rank_art
+    d = M.load(label)
+    sc = M.score(d["v"])
+    k = rank_art.art_key(d["v"], sc.get("rank"))
+    name, full, eng = M.names(label)
+    j = {"format": "lmd-sheet/1", "label": label, "name": full, "code": M.code(d["v"]),
+         "epithet": M.epithet(d), "desc": M.TYPENAME.get(M.type_key(d["v"]), ("", ""))[1],
+         "score": sc.get("scaled"), "rank": sc.get("rank"),
+         "art": {"rank": k[0], "job": k[1]} if k else None, "html": S.sheet(label)}
+    io.open(os.path.join(out_dir, f"診断書_{label}.json"), "w", encoding="utf-8").write(
+        json.dumps(j, ensure_ascii=False))
     return p
 
 
@@ -274,6 +287,7 @@ def main() -> None:
     if sc["scaled"] is not None:
         say(f"総合   : {sc['scaled']:.1f} 点（{sc['rank']}）")
     say(f"診断書 : {p}")
+    say(f"サイト用: {p[:-5]}.json  ← https://local-model-diagnosis.amanesugi.workers.dev/ の入力欄に貼ると表示・保存・印刷・X投稿ができます")
 
 
 if __name__ == "__main__":

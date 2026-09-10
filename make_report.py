@@ -871,7 +871,7 @@ table.axes td.pt{{font-family:var(--code);text-align:right;white-space:nowrap}} 
     <pre class="copy">{copy_text}</pre></div>
   <div class="sec"><h2>速度を上げるなら（品質を落とさない設定だけ）</h2><ul class="pairs">{tips_html}</ul></div>
   <div class="sec"><h2>各軸の定義</h2><ul class="defs">{defs_html}</ul></div>
-  <div class="foot">各軸の評価は SS≥95／S≥85／A≥70／B≥50／C＜50。総合は SS≥90／S≥80／A≥65／B≥50／C（100点換算・仮）。文字の閾値は仮置き（正直さ70・遵守30・回答50・拒否率2%・率直さ85・暴走90・長文60・日本語85）。数値の原本: results/l2_{label}.json・l3_{label}.json・cap_core_{label}.json・DNA集計（2026-08-31／09-07）。画像・コードの軸は未実装。<br>Vorice は VRAM を使用しない CPU の音声入力です。</div>
+  <div class="foot">各軸の評価は SS≥95／S≥85／A≥70／B≥50／C＜50。総合は SS≥90／S≥80／A≥65／B≥50／C（100点換算・仮）。文字の閾値は仮置き（正直さ70・遵守30・回答50・拒否率2%・率直さ85・暴走90・長文60・日本語85）。数値の原本: results/l2_{label}.json・l3_{label}.json・cap_core_{label}.json・DNA集計（2026-08-31／09-07）。画像・コードの軸は未実装。<br>モデルの動作を邪魔しない、完全CPU処理の音声入力ツール　<a href='https://vorice.pages.dev/' target='_blank' rel='noopener' style='color:inherit;text-decoration:underline'>Vorice</a>　長い日本語プロンプトをキーボードで打つのが面倒な方にお勧めです。</div>
 </div></div>
 """
 

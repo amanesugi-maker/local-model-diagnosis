@@ -159,9 +159,21 @@ STEPS = [
 
 
 def done(out: str, label: str) -> bool:
+    """済みかどうか。途中で止めた結果（*_partial だけで本体が無い）は済みと見なさない。
+    2026-09-10: 途中で止めた l3 を「済み」と誤認して正直さ・読解力が空のまま診断書が出た実害"""
     if out == "dna":
         return os.path.exists(os.path.join(RES, f"dna_{label}.json"))
-    return os.path.exists(os.path.join(RES, out.format(L=label)))
+    p = os.path.join(RES, out.format(L=label))
+    if not os.path.exists(p):
+        return False
+    try:
+        d = json.load(io.open(p, encoding="utf-8"))
+    except Exception:
+        return False
+    for k in list(d):
+        if k.endswith("_partial") and k[:-len("_partial")] not in d:
+            return False
+    return True
 
 
 def run_step(script: str, extra: list, host: str, port: int, model: str, label: str) -> int:

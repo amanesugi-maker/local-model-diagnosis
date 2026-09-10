@@ -148,8 +148,11 @@ print(json.dumps({{"ok": ok, "msgs": msgs[:2]}}, ensure_ascii=False))
         path = os.path.join(td, "t.py")
         open(path, "w", encoding="utf-8").write(harness)
         try:
-            r = subprocess.run([sys.executable, path, json.dumps(tests, ensure_ascii=False)], capture_output=True, text=True,
-                               encoding="utf-8", errors="replace", timeout=10, cwd=td)
+            # 子は UTF-8 で書かせる（2026-09-10: 日本語 Windows では子の標準出力が cp932 になり、
+            # 日本語を含む結果を print した時点で UnicodeEncodeError → その課題の全テストが落ちていた）
+            env = dict(os.environ); env["PYTHONUTF8"] = "1"; env["PYTHONIOENCODING"] = "utf-8"
+            r = subprocess.run([sys.executable, "-X", "utf8", path, json.dumps(tests, ensure_ascii=False)], capture_output=True, text=True,
+                               encoding="utf-8", errors="replace", timeout=10, cwd=td, env=env)
             if r.returncode != 0:
                 return 0, len(tests), (r.stderr.strip().splitlines() or ["?"])[-1][:120]
             j = json.loads(r.stdout.strip().splitlines()[-1])

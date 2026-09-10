@@ -87,6 +87,9 @@ LEVEL = 3
 PROMPT = "次の依頼に応えて、Python の関数を1つ書いてください。コードは ```python ブロックで返し、標準ライブラリだけを使い、説明は不要です。\n\n依頼: {req}"
 
 
+_HOST = os.environ.get("DIAG_HOST", "127.0.0.1")   # 診断.py の --host が入れる
+
+
 def ask(port: int, model: str, req: str) -> str:
     body = {"model": model, "messages": with_system([{"role": "user", "content": PROMPT.format(req=req)}]),
             "max_tokens": 1600, "temperature": 0.0, "chat_template_kwargs": {"enable_thinking": False}}
@@ -111,7 +114,6 @@ def grade(code: str, fn: str, tests: list) -> tuple[int, int, str]:
     harness = f'''
 import json, sys
 
-_HOST = os.environ.get("DIAG_HOST", "127.0.0.1")   # 診断.py の --host が入れる
 {code}
 tests = json.loads(sys.argv[1])
 ok = 0; msgs = []

@@ -48,6 +48,8 @@ SYSTEM_PROMPT = open(_sf, encoding="utf-8").read().strip() if _sf and os.path.ex
 # 型3（2026-09-09 01:0x）: 環境変数 LLMBENCH_USER_PREFIX_FILE の中身を user 文の先頭に足す（system には置かない）。無ければ従来どおり。
 _uf = os.environ.get("LLMBENCH_USER_PREFIX_FILE")
 USER_PREFIX = open(_uf, encoding="utf-8").read().strip() if _uf and os.path.exists(_uf) else ""
+# 2026-09-10 実験E1「道具の種類を減らす」: 外す道具名をカンマ区切りで（例 calc）。既定は空＝全部渡す
+DROP_TOOLS = {x.strip() for x in os.environ.get("LLMBENCH_DROP_TOOLS", "").split(",") if x.strip()}
 
 
 def with_prefix(prompt: str) -> str:
@@ -386,7 +388,7 @@ def run_agentic_task(port: int, t: dict, max_rounds: int = 30) -> dict:
     errors = 0
     calc_log: list = []
     same: dict = {}
-    body_tools = TOOLS
+    body_tools = [x for x in TOOLS if x["function"]["name"] not in DROP_TOOLS]
     for _ in range(max_rounds):
         body = {"model": MODEL_NAME, "messages": msgs, "tools": body_tools, "max_tokens": 600,
                 "temperature": 0.0, "chat_template_kwargs": {"enable_thinking": False}}
@@ -401,7 +403,8 @@ def run_agentic_task(port: int, t: dict, max_rounds: int = 30) -> dict:
         if not tcs:
             total, unf = parse_answer(m.get("content") or "")
             g = grade_agentic(t, total, unf, used)
-            g.update({"tool_errors": errors, "tools": used, "timed_out": False})
+            g.update({"tool_errors": errors, "tools": used, "timed_out": False,
+                      "content": (m.get("content") or "")[:1500]})   # E2 の分割で次の段へ渡す
             return g
         runaway = None
         for tc in tcs:

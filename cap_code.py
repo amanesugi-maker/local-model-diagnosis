@@ -15,6 +15,8 @@ import time
 
 import requests
 
+import effort_cfg as _E   # 2026-09-11: 思考ON（reasoning_effort）と上限の底上げ
+
 _sf = os.environ.get("LLMBENCH_SYSTEM_FILE")
 SYSTEM_PROMPT = open(_sf, encoding="utf-8").read().strip() if _sf and os.path.exists(_sf) else ""
 
@@ -92,7 +94,7 @@ _HOST = os.environ.get("DIAG_HOST", "127.0.0.1")   # 診断.py の --host が入
 
 def ask(port: int, model: str, req: str) -> str:
     body = {"model": model, "messages": with_system([{"role": "user", "content": PROMPT.format(req=req)}]),
-            "max_tokens": 1600, "temperature": 0.0, "chat_template_kwargs": {"enable_thinking": False}}
+            "max_tokens": _E.cap_tok(1600), "temperature": 0.0, "chat_template_kwargs": _E.tmpl_kwargs()}
     _t0 = time.time()
     r = requests.post(f"http://{_HOST}:{port}/v1/chat/completions", json=body, timeout=900)
     r.raise_for_status()
@@ -172,14 +174,21 @@ def run(port: int, label: str, model: str) -> None:
             ok, n, why = grade(code, fn, tests)
         except Exception as e:
             ok, n, why, code = 0, len(tests), repr(e)[:120], ""
+        # 2026-09-11: 本文が空＝コードが返らなかった問題は「打ち切り」。**不正解として0点のまま数える**
+        # （思考ONだと上限まで考え続けて答えを出さないことがある＝実測。上限を上げても直らない）
+        cut = not (code or "").strip()
         pts = 2 if ok == n else (1 if ok * 4 >= n * 3 else 0)   # L3: 全通過=2・75%以上=1（2026-09-08 21:55）
         total += pts
-        detail.append({"fn": fn, "pass": f"{ok}/{n}", "pts": pts, "why": why, "code_head": code[:120], "sec": round(time.time() - t0, 1)})
-        print(f"  {fn:18s} {ok}/{n} -> {pts}点  {why[:60]}", flush=True)
-    res = {"label": label, "port": port, "level": LEVEL, "実作業": 100.0 * total / (2 * len(TASKS)), "_実作業内訳": detail, "_usage": dict(USAGE), "_system_prompt": bool(SYSTEM_PROMPT)}
+        detail.append({"fn": fn, "pass": ("打ち切り(0/%d)" % n if cut else f"{ok}/{n}"), "pts": pts,
+                       "why": ("答えが返らないまま上限に達した" if cut else why),
+                       "cut": cut, "code_head": code[:120], "sec": round(time.time() - t0, 1)})
+        print(f"  {fn:18s} " + ("打ち切り -> 0点（答えが返らず）" if cut else f"{ok}/{n} -> {pts}点  {why[:60]}"), flush=True)
+    n_cut = sum(1 for x in detail if x.get("cut"))
+    res = {"label": label, "port": port, "level": LEVEL, "実作業": 100.0 * total / (2 * len(TASKS)),
+           "_打ち切り": f"{n_cut}/{len(detail)}", "_実作業内訳": detail, "_usage": dict(USAGE), "_system_prompt": bool(SYSTEM_PROMPT)}
     os.makedirs(WORK, exist_ok=True)
     json.dump(res, open(os.path.join(WORK, f"code_{label}.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
-    print(f"{label}: 実作業 {res['実作業']:.1f}%（{total}/{2*len(TASKS)}点）")
+    print(f"{label}: 実作業 {res['実作業']:.1f}%（{total}/{2*len(TASKS)}点・うち打ち切り {n_cut}/{len(detail)}問）")
 
 
 if __name__ == "__main__":

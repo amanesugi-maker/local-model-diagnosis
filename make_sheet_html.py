@@ -14,7 +14,10 @@ import base64
 import html
 import io
 import os
+import re
 import sys
+import time
+import unicodedata
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
@@ -41,6 +44,59 @@ def px(v: float) -> str:
 def fs(pt: float) -> str:
     """pt を --u 単位の font-size にする（1pt = 1/72 in）。"""
     return f"calc(var(--u) * {pt / 72:.5f})"
+
+
+# サイトの版と揃える
+SHEET_VER = "Ver 01.02"
+
+
+def measured_at(label: str) -> str:
+    """この診断書がいつ測られたか。results/ の結果ファイルの中でいちばん新しい時刻。
+
+    診断書HTMLを作り直しただけでは動かない（作り直しは測り直しではない）。
+    測り直した軸があればその時刻に更新される。"""
+    import glob
+    ts = []
+    for f in glob.glob(os.path.join(HERE, "results", f"*_{label}.json")):
+        if os.path.basename(f).startswith("meta_"):
+            continue
+        try:
+            ts.append(os.path.getmtime(f))
+        except OSError:
+            pass
+    if not ts:
+        return ""
+    return time.strftime("%Y-%m-%d %H:%M", time.localtime(max(ts)))
+
+
+def board_uri() -> str:
+    """点数と称号の後ろに敷く木の看板。1枚で完結させるため data URI で埋める。
+
+    素材が無い時は何も出さない（配布版で画像を同梱しない選択もできるように）。"""
+    import base64, functools
+    return _board_cached()
+
+
+import functools
+
+
+@functools.lru_cache(maxsize=1)
+def _board_cached() -> str:
+    import base64
+    f = os.path.join(HERE, "assets", "board.png")
+    if not os.path.exists(f):
+        return ""
+    return "data:image/png;base64," + base64.b64encode(io.open(f, "rb").read()).decode()
+
+
+def stamp_svg(rank: str) -> str:
+    """総合ランクのハンコ（SVG文字列）。scripts/rank_stamp.py が原本。"""
+    import os, sys
+    d = os.path.join(os.path.dirname(os.path.abspath(__file__)), "scripts")
+    if d not in sys.path:
+        sys.path.insert(0, d)
+    import rank_stamp
+    return rank_stamp.stamp(rank)
 
 
 def box(x, y, w, h=None, extra="") -> str:
@@ -105,13 +161,14 @@ def radar_svg(v: dict, ls: list, x: float, y: float, size: float, wm: str | None
         GRID, GRID2, LBL, FILL = "#C8CFD6", "#E3E7EB", "#151A1F", "#00959A"
 
     def ang(i):
-        return math.radians(-162 + i * 36) if i < 5 else math.radians(162 - (i - 5) * 36)
+        # 2026-09-11: 上下に割らず、1（無検閲度）を左上に置いて時計回りに一周（表と同じ並び）
+        return math.radians(M.ANG[i])
 
     def pt(i, rr):
         a = ang(i)
         return (cx + rr * math.cos(a)) * S, (cy + rr * math.sin(a)) * S
 
-    order = [2, 3, 4, 9, 8, 7, 6, 5, 0, 1]
+    order = list(range(10))
     out = [f'<svg class="radar" viewBox="0 0 {size*S:.0f} {size*S:.0f}" aria-hidden="true">']
     if wm is not None:
         out.append(f'<image class="art" href="{wm}" x="0" y="0" width="{size*S:.0f}" height="{size*S:.0f}"/>')
@@ -125,27 +182,52 @@ def radar_svg(v: dict, ls: list, x: float, y: float, size: float, wm: str | None
         ex, ey = pt(i, r)
         out.append(f'<line class="grid" x1="{cx*S:.1f}" y1="{cy*S:.1f}" x2="{ex:.1f}" y2="{ey:.1f}" '
                    f'stroke="{GRID2}" stroke-width="0.75" stroke-opacity=".45"/>')
-    for f in (0.2, 0.4, 0.6, 0.8, 1.0):
-        out.append(f'<text class="tick" x="{cx*S:.1f}" y="{(cy - r*f)*S:.1f}" text-anchor="middle">'
-                   f'{int(f*100)}</text>')
     vals = [0 if v.get(k) is None else v[k] / 100 for k, *_ in M.AXES]
     pts = " ".join(f"{a:.1f},{b:.1f}" for a, b in (pt(i, r * vals[i]) for i in order))
     out.append(f'<polygon class="val" points="{pts}" fill="{FILL}" fill-opacity="{.65 if wm is not None else .35}" '
                f'stroke="{"#B38600" if wm is not None else FILL}" stroke-width="{2.5 if wm is not None else 2.25}"/>')
+    gc = M.group_colors()
     for i in range(n):
         if v.get(M.AXES[i][0]) is None:
             continue
         a, b = pt(i, r * vals[i])
-        out.append(f'<circle cx="{a:.1f}" cy="{b:.1f}" r="{0.045*S:.1f}" fill="#FFFFFF" '
-                   f'stroke="{FILL}" stroke-width="1.5"/>')
+        # その軸のまとまりの色にする（縁は白のまま＝絵の上でも浮く）
+        out.append(f'<circle cx="{a:.1f}" cy="{b:.1f}" r="{0.045*S:.1f}" fill="{gc[i]}" '
+                   f'stroke="#FFFFFF" stroke-width="1.8"/>')
+    # 2026-09-11（Astra⑧）: 目盛りの数字は多角形より後に描く。先に描くと塗りに埋もれる
+    for f in (0.2, 0.4, 0.6, 0.8, 1.0):
+        out.append(f'<text class="tick" x="{cx*S:.1f}" y="{(cy - r*f)*S:.1f}" text-anchor="middle">'
+                   f'{int(f*100)}</text>')
+    # まとまりの帯。頂点で止め、端は丸く。絵の上では白を下に敷いて沈ませない
+    gc = M.group_colors()
+    BW = 0.075 * S                              # 帯の太さ
+    TRIM = math.degrees((BW / 2) / ((r + 0.13) * S))
+    for (p1, p2), col, _nm in M.GROUPS:
+        a1 = math.radians(M.ANG[p1 - 1] + TRIM)
+        a2 = math.radians(M.ANG[p2 - 1] - TRIM)
+        rr = (r + 0.13) * S
+        x1, y1 = cx * S + rr * math.cos(a1), cy * S + rr * math.sin(a1)
+        x2, y2 = cx * S + rr * math.cos(a2), cy * S + rr * math.sin(a2)
+        large = 1 if (math.degrees(a2 - a1) % 360) > 180 else 0
+        d_ = f'M {x1:.1f} {y1:.1f} A {rr:.1f} {rr:.1f} 0 {large} 1 {x2:.1f} {y2:.1f}'
+        if wm is not None:
+            out.append(f'<path class="band" d="{d_}" fill="none" stroke="#FFFFFF" stroke-width="{BW*1.6:.1f}" '
+                       f'stroke-linecap="round" stroke-opacity=".85"/>')
+        out.append(f'<path class="band" d="{d_}" fill="none" stroke="{col}" stroke-width="{BW:.1f}" '
+                   f'stroke-linecap="round" stroke-opacity=".75"/>')
     for i, (k, name, *_rest) in enumerate(M.AXES):
         lx, ly = pt(i, r + 0.34)
         val = v.get(k)
         vcol = LBL if wm is not None else "#00959A"
         if val is None:
             vcol = GRID if wm is not None else "#5F6B76"
+        # 2026-09-11: 図の英字（O・T・A…）をやめ、表と同じ文字にする（Astra④）
+        # 性格は漢字（開/誠/制…）、性能は0〜9の数字。表の「文字」列と1対1で対応する
+        th_i = M.AXES[i][3]
+        mk = (("？" if val is None else M.KANJI[k][0 if val >= th_i else 1]) if k in M.KANJI
+              else ("？" if val is None else str(min(9, int(val // 10)))))
         out.append(f'<text class="lb" x="{lx:.1f}" y="{ly:.1f}" text-anchor="middle" fill="{LBL}">'
-                   f'{E(ls[i])}  {E(name)}</text>')
+                   f'{E(mk)}  {E(name)}</text>')
         out.append(f'<text class="lv" x="{lx:.1f}" y="{ly + 12.0:.1f}" text-anchor="middle" fill="{vcol}">'
                    f'{"未測定" if val is None else f"{val:.0f}%"}</text>')
     out.append("</svg>")
@@ -162,7 +244,7 @@ def sheet(label: str) -> str:
     nm, desc = M.TYPENAME.get(M.type_key(v), ("（名前未作成）", ""))
     name, full, eng = M.names(label)
     sp = d.get("speed")
-    RX, RW = 4.55, 2.85
+    RX, RW = 4.44, 2.85   #
     o = []
     a = o.append
 
@@ -181,56 +263,101 @@ def sheet(label: str) -> str:
               f'{E(bname)}</div>')
 
     # ---- 題名 ----
-    T(0.1, 0.02, 4.25, None,
+    # 名前を切ると effort 違いの3枚が見分けられなくなるので、字を小さくして1行に収める
+    TITLE_W = 4.04
+    _nw = sum(1.0 if unicodedata.east_asian_width(c) in "WFA" else 0.52 for c in full)   # 半角の実測は0.51em。少し多めに見る
+    _ns = max(7.0, min(12.0, (TITLE_W - 0.06) * 72 / max(_nw, 1)))   # 0.06は安全代
+    T(0.31, 0.14, TITLE_W, None,
       f'<div style="font-size:{fs(20)};font-weight:700;line-height:1.15">診断書</div>'
-      f'<div style="font-size:{fs(12)};font-weight:700;line-height:1.25">{E(full)}</div>', 20)
-    T(RX, 0.08, RW, 0.24, f"{E(eng)}　／　設定文なし・L2", 8, color="var(--muted)")
-    spec = (f"生成 {sp['decode_tps']:.1f} t/s　読込 {sp['prefill_tps']:.0f} t/s　"
+      f'<div style="font-size:{fs(_ns)};font-weight:700;line-height:1.25;'
+      f'white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{E(full)}</div>', 20)
+    _eng = re.sub(r"\s*/\s*思考ON[^/]*$", "", eng)
+    T(RX, 0.25, RW, 0.29, f"{E(_eng)}　／　設定文なし・L2", 8, color="var(--muted)")
+    # 2026-09-13: 異常値ガードで decode_tps が None になることがある
+    _gen = (f"{sp['decode_tps']:.1f} t/s" if sp and sp.get('decode_tps') else "測定不能")
+    spec = (f"生成 {_gen}　読込 {sp['prefill_tps']:.0f} t/s　"
             f"VRAM {sp['vram_mib']/1024:.1f} GB" if sp else "速度は未測定")
-    T(RX, 0.39, 2.88, 0.24, "スペック: " + E(spec), 7, color="var(--muted)")
+    # 2026-09-11（Astra⑤）: スペック欄（旧 上端0.39・高さ0.24）と十文字（旧 上端0.50）が重なっていた。
+    # スペックを上へ詰め、高さも縮める
+    T(RX, 0.39, RW, 0.15, "スペック: " + E(spec), 7, color="var(--muted)")
 
     # ---- 十文字 ----
+    # 2026-09-11（Astra⑤）: 前半と後半の枠が横に0.28インチ重なっていた。1つの枠にまとめる
     head, _, tail = code.partition("-")
-    T(RX, 0.50, 1.60, 0.34, E(head), 19, bold=True, color="var(--accent)")
-    T(RX + 1.32, 0.50, RW - 1.32, 0.34, "– " + E(tail), 19, bold=True,
-      color="var(--accent)", mono=True)
+    # 十角形と表で使っている組の色にする
+    _gc = M.group_colors()
+    _cc = ("".join(f'<span style="color:{_gc[i]}">{E(c)}</span>' for i, c in enumerate(head))
+           + '<span style="color:var(--muted)"> – </span>'
+           + "".join(f'<span style="color:{_gc[5 + i]}">{E(c)}</span>'
+                     for i, c in enumerate(tail)))
+    T(RX, 0.55, RW, 0.31, _cc, 19, bold=True, mono=True)
     if sc["scaled"] is not None:
-        T(RX, 0.92, 1.55, 0.55, f"{sc['scaled']:.1f} 点", 24, bold=True, mono=True)
-        T(RX + 1.5, 1.04, RW - 1.5, 0.4, f"総合ランク {sc['rank']}", 12, bold=True,
-          color="var(--accent)", mono=True)
-        T(RX, 1.33, RW, 0.3,
-          f"{sc['n']}軸×10点＝{sc['raw']:.1f}／{10*sc['n']} を100点換算（未測定は除外）",
-          7, color="var(--muted)")
-    T(RX, 1.52, RW, 0.26, E(M.epithet(d)), 11, bold=True)
-    T(RX, 1.76, RW, 0.34, E(desc), 7.5, color="var(--muted)")
+        _bd = board_uri()
+        if _bd:
+            a(f'<img class="board" src="{_bd}" style="{box(4.30, 0.89, 2.02, 0.83)}">')
+        T(RX, 0.94, 1.60, 0.48, f"{sc['scaled']:.1f} 点", 24, bold=True, mono=True)
+        if sc.get("rank"):
+            a(f'<div class="stamp" style="{box(RX + 1.92, 0.80, 1.03, 1.03)}">'
+              f'{stamp_svg(sc["rank"])}</div>')
+        # ① 換算の一行は表の下（評価の右）へ移した
+    # ハンコの手前までに収め、長い称号は字を詰めて1行を保つ
+    _ep = M.epithet(d)
+    T(RX, 1.41, 1.74, 0.30, E(_ep), min(14.0, 125.0 / max(len(_ep), 1)), bold=True, lh=1.15)
+    _ds = E(desc)
+    _i = _ds.find("。")
+    if 0 <= _i < len(_ds) - 1:
+        _ds = _ds[:_i + 1] + "\n" + _ds[_i + 1:]
+    # ハンコの場所を「見えない場所取り」で確保し、1行目だけ手前で折り返させる
+    _keep = f'<span style="float:right;width:{px(0.99)};height:{px(0.12)}"></span>'
+    T(RX, 1.71, RW, 0.44, _keep + _ds, 7.5, color="var(--muted)", lh=1.35)
 
     # ---- レーダー ----
     # 段位×職の鍵。絵が手元に無い（配布版の利用者）時は href 空の枠だけ出し、サイトが art/<rank>/<job>.jpg を差し込む
     import rank_art
     art_key = rank_art.art_key(v, sc.get("rank"))
-    a(f'<div class="radarbox" data-art="{art_key[0] + "/" + art_key[1] if art_key else ""}" style="{box(0.385, 0.62, 3.78, 3.78)}">'
-      f'{radar_svg(v, ls, 0.385, 0.62, 3.78, (art_data_uri(v, sc.get("rank")) or "") if (WATERMARK and art_key) else None)}</div>')
+    a(f'<div class="radarbox" data-art="{art_key[0] + "/" + art_key[1] if art_key else ""}" style="{box(0.308, 0.68, 3.78, 3.78)}">'
+      f'{radar_svg(v, ls, 0.308, 0.68, 3.78, (art_data_uri(v, sc.get("rank")) or "") if (WATERMARK and art_key) else None)}</div>')
 
     # ---- 性格（本文）----
     # 行数が多い型では字を自動で縮める
-    PH = 5.36                                   # 本文の高さ（枠 5.55 の内側）
+    PH = 5.23                                   # 本文の高さ（2026-09-11 ハンコ2倍で枠を 2.34/5.35 へ下げた）
     plines = list(M.personality_lines(d, width=27))
     heads = sum(1 for k, _ in plines if k == "h")
     avail = PH - 0.042 * max(0, heads - 1)      # 見出しの上余白ぶんを引く
     pfs = min(7.0, avail * 72 / (1.35 * max(1, len(plines))))   # 行高 = 字の大きさ × 1.35
     rows = []
+    # 節ごとの色（隣り合う塊が同じ色にならない並び）。2番目の節だけは記述ごとに組の色を使う
+    PURPLE, GOLD, BLUE, GREEN = "#7B5BD6", "#B8860B", "#1F6FEB", "#0B9A6D"
+    SEC_COLS = [GOLD, None, BLUE, PURPLE]          # 性格 / 複数の軸（下で個別）/ 強み / 弱み
+    GRP_COLS = [PURPLE, GOLD, BLUE, GREEN]         # group_notes の並びと同じ
+    sec, gidx = -1, -1
     for kind, line in plines:
+        if kind == "h":
+            sec += 1; gidx = -1
+        elif kind == "b" and sec == 1:
+            gidx += 1
+        strong = (GRP_COLS[min(gidx, 3)] if (sec == 1 and gidx >= 0) else
+                  (GRP_COLS[0] if sec == 1 else SEC_COLS[min(max(sec, 0), 3)]))
+        tint = M.GROUP_TINT.get(strong, "#FFFFFF")
         pre = {"h": "", "b": "・", "c": "　"}[kind]
         cls = "h" if kind == "h" else ("b" if kind == "b" else "c")
-        rows.append(f'<div class="pl {cls}">{pre}{E(line)}</div>')
-    a(f'<div class="persona" style="{box(RX, 2.28, RW, PH)};font-size:{fs(pfs)}">'
+        # 本文は同じ幅の透明な線で字下げを揃える
+        bar = strong if kind == "h" else "transparent"
+        st = (f'background:{tint};border-left:{px(0.035)} solid {bar};'
+              f'padding-left:{px(0.03)};padding-right:{px(0.02)}')
+        if kind == "h":
+            st += ";color:#1F2933"
+        rows.append(f'<div class="pl {cls}" style="{st}">{pre}{E(line)}</div>')
+    a(f'<div class="persona" style="{box(RX, 2.21, RW, PH)};font-size:{fs(pfs)}">'
       + "".join(rows) + "</div>")
 
     # ---- 10軸の表 ----
     TH = {k: t for k, _, _, t, _ in M.AXES}
     AXD = {k: (n, dsc) for k, n, _, _, dsc in M.AXES}
     keys = P.PERSONA + P.PERF
-    cols = (0.30, 1.05, 2.20, 0.46, 0.34)
+    GC = M.group_tints()                      # 2026-09-11: 行全体を十角形と同じ色の薄い版で塗る
+    kpos = {k: i for i, (k, *_r) in enumerate(M.AXES)}
+    cols = (0.28, 0.97, 2.00, 0.45, 0.36)   #
     tr = ['<colgroup>' + "".join(f'<col style="width:{px(w)}">' for w in cols) + "</colgroup>",
           "<thead><tr>" + "".join(
               f'<th style="height:{px(0.18)}">{h}</th>'
@@ -240,7 +367,7 @@ def sheet(label: str) -> str:
         n, dsc = AXD[k]
         persona = k in P.PERSONA
         mark = ("？" if x is None else M.KANJI[k][0 if x >= TH[k] else 1]) if persona else \
-               ("-" if x is None else str(min(9, int(x // 10))))
+               ("？" if x is None else str(min(9, int(x // 10))))   #
         if persona:
             mean = f'<span>{E(P.MEANING[k][0])}</span><br><span>{E(P.MEANING[k][1])}</span>'
         else:
@@ -249,32 +376,103 @@ def sheet(label: str) -> str:
                 ("" if i == 0 else "／") + (f'<b>{E(t)}</b>' if i == hit else E(t))
                 for i, t in enumerate(M.TITLES[k]))
         tr.append(
-            f'<tr style="height:{px(0.295)}">'
+            f'<tr style="height:{px(0.295)};background:{GC[kpos[k]]}">'
             f'<td class="mk{"" if persona else " num"}">{mark}</td>'
             f'<td class="ax">{E(n)}<em>{E(dsc)}</em></td>'
             f'<td class="mean{"" if persona else " ti"}">{mean}</td>'
             f'<td class="val">{E(M.fmt(x))}</td>'
             f'<td class="rk">{E(M.rank(x))}</td></tr>')
     tr.append("</tbody>")
-    a(f'<table class="axes" style="{box(0.1, 4.42, 4.35)}">' + "".join(tr) + "</table>")
-    T(0.04, 7.58, 4.3, 0.20, "評価: SS≥95／S≥85／A≥70／B≥50／C＜50", 7.5, color="var(--muted)")
+    a(f'<table class="axes" style="{box(0.27, 4.48, 4.06)}">' + "".join(tr) + "</table>")
+    T(0.31, 7.64, 2.15, 0.20, "評価: SS≥95／S≥85／A≥70／B≥50／C＜50", 7.5, color="var(--muted)")
+    # 「（未測定は除外）」は落とす
+    if sc["scaled"] is not None:
+        T(2.48, 7.64, 1.86, 0.20,
+          f"{sc['n']}軸×10点＝{sc['raw']:.1f}／{10*sc['n']} を100点換算", 7, color="var(--muted)")
 
     # ---- 下段: 向く作業／不向きな作業 ----
     fitd, unfitd = M.work_fit_detail(d)
 
-    def work(y, h, title, items, color):
-        T(0.16, y, 1.5, 0.22, E(title), 9, bold=True, color=color)
+    FIT_STRONG, FIT_TINT = "#0B9A6D", M.GROUP_TINT["#0B9A6D"]
+
+    def speed_scale(x, y, w, h):
+        """速さの目安。当てはまる段を強調する。
+
+        速さはPCで変わるので、数字そのものではなく体感で示す。
+        読込の待ち時間は 5,000トークン（A4で3〜4枚ぶん）を投げた場合。
+        """
+        GEN = [(0, 10, "〜10", "ゆっくり音読する速度"),
+               (10, 50, "15〜30", "文章を黙読する速度"),
+               (50, 100, "50〜80", "速読を遥かに超える速度"),
+               (100, 300, "100〜200", "コードや段落が一瞬で出る"),
+               (300, 10 ** 9, "300〜", "文字を追えない速さ")]
+        RD = [(0, 500, "〜500", "A4数枚で10秒以上待つ"),
+              (500, 2000, "500〜2千", "数秒待つ"),
+              (2000, 10000, "2千〜1万", "1秒ほどで書き始める"),
+              (10000, 10 ** 9, "1万〜", "待ち時間を感じない")]
+        gen = (sp or {}).get("decode_tps")
+        rd = (sp or {}).get("prefill_tps")
+
+        def block(title, val, unit, rows, gap=0.02, lead=""):
+            """"""
+            hit = next((i for i, (lo, hi, *_r) in enumerate(rows)
+                        if val and lo <= val < hi), None)
+            out = [f'<div style="font-size:{fs(7.2)};font-weight:700;color:var(--muted);line-height:1.3;'
+                   f'border-bottom:{px(0.012)} solid #C8CFD6;padding-bottom:{px(0.012)};'
+                   f'margin:{px(gap)} 0 {px(0.03)}">{E(title)}'
+                   + (f'<span style="font-weight:400">（{lead}<b style="color:#1F6FEB">'
+                      f'{val:,.0f}</b> {unit}）</span>' if val else "") + "</div>"]
+            for i, (_lo, _hi, rng, txt) in enumerate(rows):
+                on = (i == hit)
+                out.append(
+                    f'<div style="display:flex;gap:{px(0.04)};align-items:baseline;line-height:1.25;'
+                    f'background:{"#1F6FEB" if on else "transparent"};'
+                    f'color:{"#FFFFFF" if on else "var(--muted)"};border-radius:{px(0.018)};'
+                    f'padding:{px(0.007)} {px(0.028)};margin-bottom:{px(0.005)};'
+                    f'font-weight:{"700" if on else "400"}">'
+                    f'<span style="font-size:{fs(6.6)};font-family:var(--mono);'
+                    f'min-width:{px(0.42)};text-align:right">{E(rng)}</span>'
+                    f'<span style="font-size:{fs(6.3)};line-height:1.2">{E(txt)}</span></div>')
+            return "".join(out)
+
+        a(f'<div class="scalebox" style="{box(x, y, w, h)}">'
+          + block("生成速度の目安", gen, "t/s", GEN, 0.0, " ")
+          + block("読込速度の目安", rd, "t/s", RD, 0.225, " ")
+          + "</div>")
+
+    def work(y, h, title, items, color, strong=None, tint=None):
+        # 2026-09-11: 見出しごと1つの枠に入れる（前は見出しが枠の外にあって縦にずれていた）。
+        # 縦線は見出しの行だけ。本文は同じ幅の透明な線で字下げを揃える
         li = "".join(
-            f'<div class="wl"><b style="color:{color}">・{E(nm2)}　</b>'
+            f'<div class="wl" style="border-left:{px(0.035)} solid transparent;padding-left:{px(0.03)}">'
+            f'<b style="color:{color}">・{E(nm2)}　</b>'
             f'<span>{E(why)}</span></div>' for nm2, why in items)
-        a(f'<div class="work" style="{box(0.16, y + 0.21, 7.15, h)};font-size:{fs(7.6)}">{li}</div>')
+        hd = (f'<div style="font-size:{fs(9)};font-weight:700;color:{color};'
+              f'border-left:{px(0.035)} solid {strong or FIT_STRONG};padding-left:{px(0.03)};'
+              f'margin-bottom:{px(0.03)}">{E(title)}</div>')
+        # 高さは内容に合わせる（固定だと色の枠が上下に余って、隣の枠と重なる）
+        # 箱を縮めると文章が折り返すので、色だけを 5.60in で切る
+        _bg = (f'linear-gradient(to right,{tint or FIT_TINT} 0,'
+               f'{tint or FIT_TINT} {px(5.204)},transparent {px(5.204)})')
+        a(f'<div class="work" style="{box(0.40, y, 6.90)};font-size:{fs(7.6)};'
+          f'background:{_bg};padding:{px(0.03)} {px(0.02)} {px(0.02)} 0">{hd}{li}</div>')
 
     work(7.98, 0.78, "向く作業", fitd[:3] or [("（該当なし）", "高い軸が条件に届いていない")],
-         "var(--accent)")
+         "var(--accent)", strong="#1F6FEB", tint=M.GROUP_TINT["#1F6FEB"])
     work(8.78, 0.86, "不向きな作業", unfitd[:4] or [("（目立つものなし）", "落ちた軸が無い")],
-         "var(--bad)")
-    T(0.1, 9.8, 7.3, 0.17, "モデルの動作を邪魔しない、完全CPU処理の音声入力ツール　<a href='https://vorice.pages.dev/' target='_blank' rel='noopener' style='color:inherit;text-decoration:underline'>Vorice</a>　長い日本語プロンプトをキーボードで打つのが面倒な方にお勧めです。", 6,
+         "var(--bad)", strong="#7B5BD6", tint=M.GROUP_TINT["#7B5BD6"])
+
+
+
+    # 生成の速さの目安に差し替え
+    # 高さも中身に合わせて 1.58→1.66
+    speed_scale(5.70, 7.85, 1.58, 1.80)   # 色帯の右端(5.60)より右へ
+    T(0.31, 9.73, 7.08, 0.17, "モデルの動作を邪魔しない、完全CPU処理の音声入力ツール　<a href='https://vorice.pages.dev/' target='_blank' rel='noopener' style='color:inherit;text-decoration:underline'>Vorice</a>　長い日本語プロンプトをキーボードで打つのが面倒な方にお勧めです。", 6,
       color="var(--muted)")
+
+    _at = measured_at(label)
+    T(4.10, 9.73, 3.19, 0.17, E(SHEET_VER + ("　" + _at if _at else "")), 6,
+      color="var(--muted)", align="right")
 
     return ('<div class="sheet-fit"><div class="sheet-page">'
             + "".join(o) + "</div></div>")
@@ -287,7 +485,8 @@ SHEET_CSS = """
 .radarbox.noart .radar text{stroke:none}
 .radarbox.noart .radar text:not(.tick){fill:#151A1F}
 
-.sheet-fit{container-type:inline-size;width:100%;max-width:820px;margin:0 auto}
+A4縦は高さ=幅x1.333なので、幅の上限を (画面高-余白)x0.75 にすると1枚が丸ごと入る */
+.sheet-fit{container-type:inline-size;width:100%;margin:0 auto;max-width:min(820px,calc((100vh - 48px)*.75));max-width:min(820px,calc((100svh - 48px)*.75))}
 .sheet-page{--u:13.3333cqw;--mono:Consolas,"SF Mono",monospace;
   position:relative;width:100%;aspect-ratio:7.5/10;background:var(--paper);
   color:var(--ink);font-family:"Yu Gothic UI","Yu Gothic","Noto Sans JP",sans-serif;
@@ -299,6 +498,15 @@ SHEET_CSS = """
 .sheet-page .tab{position:absolute;background:var(--accent);color:#fff;font-weight:700;
   padding-left:calc(var(--u)*0.0394);display:flex;align-items:center;line-height:1}
 .sheet-page .radarbox{position:absolute}
+/* 2026-09-11 総合ランクのハンコ（scripts/rank_stamp.py） */
+.sheet-page .stamp{position:absolute}
+/* 2026-09-11 速さ×正確さの4象限（下段の右の空きに重ねる） */
+.sheet-page .scalebox{position:absolute}
+/* 2026-09-11 点数と称号の後ろに敷く木の看板 */
+.sheet-page .board{position:absolute;object-fit:fill;z-index:0;opacity:.92}
+.sheet-page .t{z-index:1}
+.sheet-page .scalebox *{box-sizing:border-box}
+.sheet-page .stamp svg{width:100%;height:100%;display:block}
 .sheet-page .radar{width:100%;height:100%;display:block}
 .sheet-page .radar .tick{font-size:9.03px;font-family:Consolas,monospace;fill:#D5DBE0}
 .sheet-page .radar .lb{font-size:10.42px;font-weight:700;
@@ -308,9 +516,9 @@ SHEET_CSS = """
 .sheet-page .persona .h{font-weight:700;color:var(--accent);margin-top:calc(var(--u)*0.042)}
 .sheet-page .persona .h:first-child{margin-top:0}
 .sheet-page .axes{position:absolute;border-collapse:collapse;table-layout:fixed}
-.sheet-page .axes th{font-size:calc(var(--u)*0.1111);font-weight:700;text-align:left;
+.sheet-page .axes th{font-size:calc(var(--u)*0.1111);font-weight:700;text-align:center;
   padding:calc(var(--u)*0.020);border:0.5px solid var(--line);background:#F5F7F8;line-height:1.1}
-.sheet-page .axes td{padding:calc(var(--u)*0.020);border:0.5px solid var(--line);
+.sheet-page .axes td{padding:calc(var(--u)*0.020);border:0.5px solid var(--line);border-top:0.5px solid rgba(21,26,31,.35);border-bottom:0.5px solid rgba(21,26,31,.35);
   vertical-align:middle;line-height:1.2}
 .sheet-page .axes .mk{font-size:calc(var(--u)*0.1528);font-weight:700;text-align:center}
 .sheet-page .axes .mk.num{font-family:var(--mono);font-size:calc(var(--u)*0.1389)}

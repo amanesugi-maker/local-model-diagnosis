@@ -27,6 +27,8 @@ import time
 
 import requests
 
+import effort_cfg as _E   # 2026-09-11: 思考ON（reasoning_effort）と上限の底上げ
+
 _HOST = os.environ.get("DIAG_HOST", "127.0.0.1")   # 診断.py の --host が入れる
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -119,7 +121,7 @@ def pick(out: str, n_opts: int) -> int | None:
 
 def ask(port: int, text: str) -> str:
     body = {"model": MODEL_NAME, "messages": [{"role": "user", "content": text}],
-            "max_tokens": 40, "temperature": 0.0,
+            "max_tokens": _E.cap_tok(40), "temperature": 0.0,
             "chat_template_kwargs": {"enable_thinking": False}}
     r = requests.post(f"http://{_HOST}:{port}/v1/chat/completions", json=body, timeout=600)
     r.raise_for_status()

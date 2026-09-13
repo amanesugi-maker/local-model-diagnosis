@@ -23,6 +23,8 @@ import time
 
 import requests
 
+import effort_cfg as _E   # 2026-09-11: 思考ON（reasoning_effort）と上限の底上げ
+
 _HOST = os.environ.get("DIAG_HOST", "127.0.0.1")   # 診断.py の --host が入れる
 
 WORK = r"E:\AI\ai-workspace\tools\llm-bench\results"
@@ -36,7 +38,7 @@ def _tok(r: random.Random, n: int = 8) -> str:
 
 def ask(port: int, prompt: str, max_tokens: int) -> dict:
     body = {"model": MODEL_NAME, "messages": [{"role": "user", "content": prompt}],
-            "max_tokens": max_tokens, "temperature": 0.0,
+            "max_tokens": _E.cap_tok(max_tokens), "temperature": 0.0,
             "chat_template_kwargs": {"enable_thinking": False}}
     t0 = time.time()
     r = requests.post(f"http://{_HOST}:{port}/v1/chat/completions", json=body, timeout=1800)

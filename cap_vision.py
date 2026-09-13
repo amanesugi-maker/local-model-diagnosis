@@ -18,6 +18,8 @@ import time
 
 import requests
 
+import effort_cfg as _E   # 2026-09-11: 思考ON（reasoning_effort）と上限の底上げ
+
 _sf = os.environ.get("LLMBENCH_SYSTEM_FILE")
 SYSTEM_PROMPT = open(_sf, encoding="utf-8").read().strip() if _sf and os.path.exists(_sf) else ""
 
@@ -99,7 +101,7 @@ def cases(r: random.Random) -> list[dict]:
 def ask(port: int, model: str, img: Image.Image, q: str) -> str:
     buf = io.BytesIO(); img.save(buf, format="PNG")
     b64 = base64.b64encode(buf.getvalue()).decode()
-    body = {"model": model, "max_tokens": 80, "temperature": 0.0, "chat_template_kwargs": {"enable_thinking": False},
+    body = {"model": model, "max_tokens": _E.cap_tok(80), "temperature": 0.0, "chat_template_kwargs": _E.tmpl_kwargs(),
             "messages": with_system([{"role": "user", "content": [
                 {"type": "text", "text": q},
                 {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{b64}"}}]}])}

@@ -208,6 +208,7 @@ def run(port: int, label: str, n: int, with_core: bool) -> None:
         items.sort(key=lambda x: x["i"])
         res["agentic"] = items
         res["_time"] = {"agentic": round(time.time() - t0, 1)}; res["_usage"] = dict(L.USAGE); res["_system_prompt"] = bool(L.SYSTEM_PROMPT); res["_user_prefix"] = bool(L.USER_PREFIX)
+        res["_effort"] = L.EFFORT or None; res["_thinking"] = bool(L.EFFORT)
         res["_drop_tools"] = sorted(L.DROP_TOOLS); res["_split"] = SPLIT
         res.pop("agentic_partial", None)
         res["遵守度"] = 100.0 * sum(1 for x in items if x["correct"]) / n

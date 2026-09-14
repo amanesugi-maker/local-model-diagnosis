@@ -1,0 +1,93 @@
+{
+ "objects": [
+  {
+   "name": "人物",
+   "count": 1,
+   "color": null,
+   "position": "中央"
+  },
+  {
+   "name": "着物",
+   "count": 1,
+   "color": "青",
+   "position": "中央"
+  },
+  {
+   "name": "花",
+   "count": 1,
+   "color": "白",
+   "position": "中央"
+  },
+  {
+   "name": "提灯",
+   "count": 1,
+   "color": "橙",
+   "position": "左"
+  },
+  {
+   "name": "紫陽花",
+   "count": null,
+   "color": "緑",
+   "position": "左"
+  }
+ ],
+ "must_mention": [
+  "人物",
+  "着物",
+  "花"
+ ],
+ "aliases": {
+  "人物": [
+   "女性",
+   "女の人"
+  ],
+  "着物": [
+   "和服",
+   "浴衣",
+   "きもの"
+  ],
+  "花": [
+   "髪飾り",
+   "花飾り",
+   "紫陽花",
+   "あじさい",
+   "アジサイ"
+  ]
+ },
+ "decoys": [
+  "傘",
+  "犬",
+  "扇子",
+  "猫",
+  "帽子"
+ ],
+ "scene": "屋外（縁側）",
+ "text_in_image": [],
+ "person": {
+  "count": 1,
+  "clothing": "和服",
+  "colors": [
+   "紺",
+   "白"
+  ],
+  "pose": "手を挙げる",
+  "facing": "左",
+  "hair": "お団子・黒",
+  "hands_visible": true,
+  "fingers_visible": null
+ },
+ "count_questions": [
+  {
+   "q": "提灯は何個ありますか？",
+   "a": 1
+  }
+ ],
+ "hard": false,
+ "labeler": "Claude Fable 5.1",
+ "labeled_at": "2026-09-14",
+ "checked_by_human": false,
+ "has_unreadable_text": true,
+ "fix_log": [
+  "2026-09-14 08:05 提灯の文字は判読が割れる→文字の問いに使わない"
+ ]
+}

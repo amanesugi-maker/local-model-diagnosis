@@ -1,0 +1,68 @@
+{
+ "objects": [
+  {
+   "name": "手",
+   "count": 1,
+   "color": null,
+   "position": "中央"
+  },
+  {
+   "name": "指輪",
+   "count": 1,
+   "color": null,
+   "position": "中央"
+  }
+ ],
+ "must_mention": [
+  "手",
+  "指輪"
+ ],
+ "aliases": {
+  "手": [
+   "両手",
+   "片手",
+   "指",
+   "手首"
+  ],
+  "指輪": [
+   "リング",
+   "結婚指輪"
+  ]
+ },
+ "decoys": [
+  "時計",
+  "手袋",
+  "ペン",
+  "スマートフォン",
+  "花"
+ ],
+ "scene": "砂利の上に置いた片手（薬指に指輪）",
+ "hard": false,
+ "person": {
+  "count": null,
+  "clothing": null,
+  "colors": [],
+  "pose": null,
+  "facing": null,
+  "hair": null,
+  "hands_visible": true,
+  "fingers_visible": 5
+ },
+ "count_questions": [
+  {
+   "q": "はっきり見えている指は全部で何本ですか？",
+   "a": 5
+  },
+  {
+   "q": "指輪はどの指にありますか？",
+   "a": "薬指"
+  }
+ ],
+ "text_in_image": [],
+ "labeler": "Claude Fable 5.1",
+ "labeled_at": "2026-09-14",
+ "checked_by_human": false,
+ "fix_log": [
+  "2026-09-14 11:40 囮に指輪が入っていた（写っている）→ 必須へ移動。8本全部が囮で落ちた"
+ ]
+}

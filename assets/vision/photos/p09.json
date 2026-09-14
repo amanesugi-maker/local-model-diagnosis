@@ -1,0 +1,84 @@
+{
+ "objects": [
+  {
+   "name": "畳",
+   "count": null,
+   "color": "緑",
+   "position": "中央"
+  },
+  {
+   "name": "障子",
+   "count": 2,
+   "color": "白",
+   "position": "中央"
+  },
+  {
+   "name": "照明",
+   "count": 1,
+   "color": "白",
+   "position": "中央"
+  },
+  {
+   "name": "花",
+   "count": 1,
+   "color": "緑",
+   "position": "左"
+  },
+  {
+   "name": "襖",
+   "count": null,
+   "color": "白",
+   "position": "右"
+  }
+ ],
+ "must_mention": [
+  "畳",
+  "障子",
+  "照明"
+ ],
+ "aliases": {
+  "畳": [
+   "和室",
+   "たたみ"
+  ],
+  "障子": [
+   "窓",
+   "格子",
+   "しょうじ",
+   "引き戸"
+  ],
+  "照明": [
+   "ライト",
+   "電気",
+   "シーリング",
+   "明かり",
+   "ランプ"
+  ]
+ },
+ "decoys": [
+  "テレビ",
+  "机",
+  "座布団",
+  "人",
+  "猫"
+ ],
+ "scene": "和室",
+ "count_questions": [
+  {
+   "q": "天井の丸い照明は何個ありますか？",
+   "a": 1
+  },
+  {
+   "q": "生け花（花の入った花瓶）はいくつありますか？",
+   "a": 1
+  }
+ ],
+ "person": {
+  "count": 0
+ },
+ "text_in_image": [],
+ "hard": false,
+ "labeler": "Claude Fable 5.1",
+ "labeled_at": "2026-09-14",
+ "checked_by_human": false
+}

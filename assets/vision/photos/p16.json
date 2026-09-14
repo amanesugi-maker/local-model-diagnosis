@@ -1,0 +1,73 @@
+{
+ "objects": [
+  {
+   "name": "女性",
+   "count": 2,
+   "color": null,
+   "position": "中央"
+  },
+  {
+   "name": "腕",
+   "count": null,
+   "color": null,
+   "position": "中央"
+  },
+  {
+   "name": "入れ墨",
+   "count": null,
+   "color": "黒",
+   "position": "中央"
+  }
+ ],
+ "must_mention": [
+  "女性",
+  "腕"
+ ],
+ "aliases": {
+  "女性": [
+   "人物",
+   "2人",
+   "二人",
+   "女の人",
+   "モデル"
+  ],
+  "腕": [
+   "手",
+   "伸ばし",
+   "ポーズ",
+   "広げ"
+  ]
+ },
+ "decoys": [
+  "帽子",
+  "眼鏡",
+  "犬",
+  "椅子",
+  "花"
+ ],
+ "scene": "スタジオ",
+ "person": {
+  "count": 2,
+  "clothing": "私服",
+  "colors": [
+   "黒",
+   "ベージュ"
+  ],
+  "pose": "手を挙げる",
+  "facing": "正面",
+  "hair": null,
+  "hands_visible": true,
+  "fingers_visible": null
+ },
+ "count_questions": [
+  {
+   "q": "写っている人は何人ですか？",
+   "a": 2
+  }
+ ],
+ "text_in_image": [],
+ "hard": false,
+ "labeler": "Claude Fable 5.1",
+ "labeled_at": "2026-09-14",
+ "checked_by_human": false
+}

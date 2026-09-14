@@ -81,10 +81,10 @@ AXES = [
     # 定義（分母は全20問）は変えない。
     ("rule", "正答率", "RF", 30, "20問中いくつ正解したか"),
     ("answer", "到達率", "CQ", 50, "止まらず答えまで行けた率"),
-    ("code", "実作業", "EU", 50, "依頼文10本を隠しテスト"),
+    ("code", "実作業", "EU", 50, "5段の梯子・各10問"),   # Ver 01.03: L1〜L5（8/10 で次の段へ）
     ("long", "読解力", "LS", 60, "500〜3,500語から拾う"),
     ("ja", "日本語の質", "NM", 85, "語彙・古文・敬語・漢字"),
-    ("vision", "画像認識", "VB", 60, "画像の乱数文字列12枚"),   # 2026-09-11 改名（旧: 画像を見るか）
+    ("vision", "画像認識", "VB", 60, "5段の梯子・各10問"),   # Ver 01.03: V1〜V5（8/10 で次の段へ）
 ]
 # まとまり（位置は1始まり・10→1 は継ぎ目をまたぐ）。診断書の帯と色を合わせる
 GROUPS = [((10, 1), "#7B5BD6", "無検閲の画像判定"), ((2, 4), "#B8860B", "答え方の性質"),
@@ -172,6 +172,19 @@ def load(label: str) -> dict:
     l2, l3, core = j(f"l2_{label}.json"), j(f"l3_{label}.json"), j(f"cap_core_{label}.json")
     sp = j(f"speed_{label}.json") or None
     vis, cod = j(f"vision_{label}.json"), j(f"code_{label}.json")
+    # Ver 01.03: 梯子の結果があればそちらを使う（無ければ従来の1段の結果＝古い診断書もそのまま読める）
+    cl, vl = j(f"code_ladder_{label}.json"), j(f"vision_ladder_{label}.json")
+    def _ladder(lad, key):
+        lv = lad.get("levels") or {}
+        # 実作業は {"1": 10, ...}（各10問の通過数）、画像認識は {"1": {"通過":..,"問題数":..}, ...}
+        rows = [(int(k), lv[k], 10) if isinstance(lv[k], int) else (int(k), lv[k]["通過"], lv[k]["問題数"]) for k in sorted(lv, key=int)]
+        got, n = sum(r[1] for r in rows), sum(r[2] for r in rows)
+        rk = lad.get("貫通段位")
+        if isinstance(rk, dict):          # 実作業は 8/9/10 の3基準を持つ → 8/10 を使う
+            rk = rk.get("8")
+        return (100.0 * got / n if n else None), rows, (list(rk) if rk else None)
+    code_pct, codeL, code_rank = _ladder(cl, "code") if cl else (None, [], None)
+    vis_pct, visL, vis_rank = _ladder(vl, "vision") if vl else (None, [], None)
     ja_ext = j(f"ja_{label}.json")   # 2026-09-09 追加: 語彙・表記／古文・文語／敬語 の36問
     it = l2.get("agentic") or []
     tasks = L2.make_tasks(len(it)) if it else []
@@ -191,13 +204,13 @@ def load(label: str) -> dict:
         "honest": l3.get("正直さ"), "rule": l2.get("遵守度"),
         "answer": l2.get("回答率") if "回答率" in l2 else (100.0 * sum(1 for x in it if L2.answered(tasks[x["i"]], x)) / len(it) if it else None),
         "open": _dna(label)[0], "direct": _dna(label)[1],
-        "vision": None if vis_na else vis.get("画像を見るか"), "calm": core.get("暴走のなさ"),
+        "vision": vis_pct if vl else (None if vis_na else vis.get("画像を見るか")), "calm": core.get("暴走のなさ"),
         "long": None if long_err else _read,
         # 日本語の質＝要約課題(21チェック)と拡張36問を実チェック数で通算。
         # 要約だけだと6モデルが 85.7〜90.5 に固まって識別できなかったため。
         "ja": (l3["日本語の質"] * 21 + ja_ext["日本語・拡張"] * 36) / 57
               if ("日本語の質" in l3 and "日本語・拡張" in ja_ext) else l3.get("日本語の質"),
-        "code": cod.get("実作業"),
+        "code": code_pct if cl else cod.get("実作業"),
     }
     return {
         "label": label, "v": v, "fell": dict(sorted(fell.items(), key=lambda kv: -kv[1])),
@@ -212,6 +225,8 @@ def load(label: str) -> dict:
         "speed": sp,
         "visionK": [(x["kind"], x["ok"]) for x in vis.get("_画像内訳", [])],
         "codeK": [(x["fn"], x["pass"], x["pts"]) for x in cod.get("_実作業内訳", [])],
+        "codeL": codeL, "code_rank": code_rank,      # Ver 01.03: 段ごとの通過数と貫通段位 [段, 名]
+        "visL": visL, "vision_rank": vis_rank,
         "jaExt": ja_ext.get("_節別"),            # 語彙・表記／古文・文語／敬語 の節別
         "jaSum": l3.get("日本語の質"),            # 要約課題だけの点（従来の値・比較用）
     }
@@ -245,11 +260,11 @@ DEFS = {   # ⑥ 各軸の定義（脚注）
     "answer": "必要な道具を全部呼んだうえで答えを出した率。正誤は問わない（L2）",
     "open": "Do-Not-Answer 日本語版939問で『完全拒否』しなかった率（DNA）",
     "direct": "前置き・説教なしで答えた率（DNA）",
-    "vision": "推測不能な8文字を埋めた画像10枚（易5・難5）＋文字の無い画像2枚。正しく読み、無い時は無いと言えた率",
+    "vision": "5段の梯子（V1 物・数・文字／V2 図表／V3 場面の説明／V4 人物の細部／V5 2枚の比較）各10問。合計/50。段位は8/10で次へ進めた最上段",
     "calm": "考え込みやすい5問で自分で止まれた率＝finish_reason が length でない（L1）",
     "long": "4,000行のログに失効・再発行・checksum・件数を埋めて8問（L3）",
     "ja": "英語混入・文体混在・繰り返し・字数・指定語・禁止語・漢数字の7チェック×3問（L3）",
-    "code": "日本語の依頼文10本→返ってきた関数を隠しテストで採点（全通過2点・75%以上1点・それ以外0点）。合計/20",
+    "code": "5段の梯子（L1 新人〜L5 英雄）各10問の依頼文→返ってきた関数を隠しテストで採点。合計/50。段位は8/10で次へ進めた最上段",
 }
 
 
@@ -590,7 +605,11 @@ def work_fit_detail(d: dict) -> tuple[list[tuple[str, str]], list[tuple[str, str
         fit.append(("長い記録から必要な行を拾う",
                     f"読解力 {g('long'):.0f}%。失効や再発行のような"
                     "「あとから上書きされた情報」を追える"))
-    if (g("code") or 0) >= 70:
+    if d.get("code_rank") and d["code_rank"][0] >= 3:
+        fit.append(("依頼どおりのコードを書かせる",
+                    f"実作業は{d['code_rank'][1]}（L{d['code_rank'][0]}まで8/10以上）。"
+                    "日常の依頼文なら細かい手直しが要らない"))
+    elif not d.get("code_rank") and (g("code") or 0) >= 70:
         fit.append(("依頼どおりのコードを書かせる",
                     f"実作業 {g('code'):.0f}% で、隠しテストをそのまま通る割合が高い。"
                     "細かい手直しが要らない"))
@@ -632,7 +651,11 @@ def work_fit_detail(d: dict) -> tuple[list[tuple[str, str]], list[tuple[str, str
             or g("ja") < 85):
         unfit.append(("字数・語句を指定した文章",
                       f"日本語 {g('ja'):.0f}%。字数の上限下限や、使う語・使わない語の指定を外しやすい"))
-    if g("code") is not None and d.get("codeK") and any(pts < 2 for _, _, pts in d["codeK"]):
+    if d.get("code_rank") and d["code_rank"][0] <= 2:
+        unfit.append(("境界条件のあるコード",
+                      f"実作業は{d['code_rank'][1]}（L{d['code_rank'][0]}まで）。"
+                      "空の入力・端の値・重複が絡む依頼で落ちる。その3つで必ず試す"))
+    elif g("code") is not None and d.get("codeK") and any(pts < 2 for _, _, pts in d["codeK"]):
         unfit.append(("境界条件のあるコード",
                       f"実作業 {g('code'):.0f}%。空の入力・端の値・重複で落ちる。"
                       "その3つで必ず試す"))
@@ -694,12 +717,22 @@ def title_of(k: str, v: dict) -> str | None:
     return None if x is None else TITLES[k][tier5(x)]
 
 
+def title_hit(k: str, d: dict) -> int | None:
+    """称号の当たり（0〜4）。梯子の軸は貫通段位（L/V の段）で決め、それ以外は百分率の5段で決める（Ver 01.03）。"""
+    rk = d.get("code_rank") if k == "code" else d.get("vision_rank") if k == "vision" else None
+    if rk:
+        return max(0, min(4, int(rk[0]) - 1))
+    x = d["v"].get(k)
+    return None if x is None else tier5(x)
+
+
 def epithet(d: dict) -> str:
     """二つ名 = 冠 ＋ 位 ＋ 職。"""
     v = d["v"]
     job = TYPENAME.get(type_key(v), ("（名前未作成）", ""))[0]
     cands = [(v[k], k) for k in CROWN_AXES if v.get(k) is not None]
-    rank = title_of("code", v) or ""
+    hit = title_hit("code", d)
+    rank = "" if hit is None else TITLES["code"][hit]
     if not cands:
         return f"{rank}{job}"
     crown = TITLES[max(cands)[1]][tier5(max(cands)[0])]

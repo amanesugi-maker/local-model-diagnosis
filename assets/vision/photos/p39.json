@@ -1,0 +1,53 @@
+{
+ "objects": [
+  {
+   "name": "さくらんぼ",
+   "count": 11,
+   "color": "赤",
+   "position": "中央"
+  }
+ ],
+ "must_mention": [
+  "さくらんぼ",
+  "白"
+ ],
+ "aliases": {
+  "さくらんぼ": [
+   "チェリー",
+   "サクランボ",
+   "桜桃",
+   "cherry"
+  ],
+  "白": [
+   "白い背景",
+   "白地",
+   "背景"
+  ]
+ },
+ "decoys": [
+  "皿",
+  "ぶどう",
+  "りんご",
+  "葉",
+  "ボウル"
+ ],
+ "scene": "白い背景",
+ "hard": true,
+ "count_questions": [
+  {
+   "q": "さくらんぼは何個ありますか？",
+   "a": 11
+  },
+  {
+   "q": "色が濃くて黒っぽいさくらんぼは何個ありますか？",
+   "a": 1
+  }
+ ],
+ "person": {
+  "count": 0
+ },
+ "text_in_image": [],
+ "labeler": "Claude Fable 5.1",
+ "labeled_at": "2026-09-14",
+ "checked_by_human": false
+}

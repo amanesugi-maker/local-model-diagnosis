@@ -29,6 +29,8 @@ import time
 
 import requests
 
+import effort_cfg as _E   # 2026-09-13: 思考ON対応（既定はOFFのまま）
+
 WORK = r"E:\AI\ai-workspace\tools\llm-bench\results"
 MODEL_NAME = "x"
 
@@ -179,8 +181,8 @@ def serve(name: str, a: dict, t: dict) -> str:
 # ------------------------------------------------------------------ 実行
 def call(port: int, messages: list, max_tokens: int = 500) -> dict:
     body = {"model": MODEL_NAME, "messages": messages, "tools": TOOLS,
-            "max_tokens": max_tokens, "temperature": 0.0,
-            "chat_template_kwargs": {"enable_thinking": False}}
+            "max_tokens": _E.cap_tok(max_tokens), "temperature": 0.0,
+            "chat_template_kwargs": _E.tmpl_kwargs()}
     r = requests.post(f"http://127.0.0.1:{port}/v1/chat/completions", json=body, timeout=1800)
     r.raise_for_status()
     return r.json()["choices"][0]["message"]

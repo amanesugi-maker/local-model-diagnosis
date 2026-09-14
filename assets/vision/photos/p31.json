@@ -1,0 +1,88 @@
+{
+ "objects": [
+  {
+   "name": "人物",
+   "count": 1,
+   "color": null,
+   "position": "中央"
+  },
+  {
+   "name": "スマートフォン",
+   "count": 1,
+   "color": "黒",
+   "position": "中央"
+  },
+  {
+   "name": "バッグ",
+   "count": 1,
+   "color": "黒",
+   "position": "中央"
+  },
+  {
+   "name": "紙袋",
+   "count": 1,
+   "color": "茶",
+   "position": "左"
+  }
+ ],
+ "must_mention": [
+  "人物",
+  "スマートフォン",
+  "バッグ"
+ ],
+ "aliases": {
+  "人物": [
+   "女性",
+   "女の人",
+   "女の子"
+  ],
+  "スマートフォン": [
+   "スマホ",
+   "携帯",
+   "電話",
+   "phone"
+  ],
+  "バッグ": [
+   "リュック",
+   "鞄",
+   "かばん",
+   "紙袋",
+   "袋",
+   "バックパック"
+  ]
+ },
+ "decoys": [
+  "犬",
+  "傘",
+  "帽子",
+  "眼鏡",
+  "自転車"
+ ],
+ "scene": "屋外（建物の前）",
+ "text_in_image": [
+  "petco"
+ ],
+ "person": {
+  "count": 1,
+  "clothing": "私服",
+  "colors": [
+   "黒",
+   "ベージュ"
+  ],
+  "pose": "立つ",
+  "facing": "右",
+  "hair": "ロング・黒",
+  "hands_visible": true,
+  "fingers_visible": null
+ },
+ "count_questions": [
+  {
+   "q": "床に置いてある紙袋は何個ですか？",
+   "a": 1
+  }
+ ],
+ "hard": false,
+ "labeler": "Claude Fable 5.1",
+ "labeled_at": "2026-09-14",
+ "checked_by_human": false
+}

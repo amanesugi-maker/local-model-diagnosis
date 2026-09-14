@@ -1,0 +1,61 @@
+{
+ "objects": [
+  {
+   "name": "手",
+   "count": 2,
+   "color": null,
+   "position": "中央"
+  }
+ ],
+ "must_mention": [
+  "手",
+  "指"
+ ],
+ "aliases": {
+  "手": [
+   "両手",
+   "腕",
+   "手首"
+  ],
+  "指": [
+   "爪",
+   "指先"
+  ]
+ },
+ "decoys": [
+  "指輪",
+  "時計",
+  "ブレスレット",
+  "花",
+  "手袋"
+ ],
+ "scene": "白い背景",
+ "hard": true,
+ "person": {
+  "count": null,
+  "clothing": null,
+  "colors": [],
+  "pose": null,
+  "facing": null,
+  "hair": null,
+  "hands_visible": true,
+  "fingers_visible": null
+ },
+ "count_questions": [
+  {
+   "q": "写っている手は何本ですか？",
+   "a": 2
+  },
+  {
+   "q": "はっきり見えている指は全部で何本ですか？",
+   "a": 10
+  }
+ ],
+ "text_in_image": [],
+ "labeler": "Claude Fable 5.1",
+ "labeled_at": "2026-09-14",
+ "checked_by_human": false,
+ "fix_log": [
+  "2026-09-14 13:00 指の本数を外す（交差した2本の手で上の手は指を曲げている＝「伸ばしている指」が数えられない。8本全部が不正解）"
+ ]
+}

@@ -1,0 +1,56 @@
+{
+ "objects": [
+  {
+   "name": "手",
+   "count": 2,
+   "color": null,
+   "position": "中央"
+  }
+ ],
+ "must_mention": [
+  "手",
+  "赤"
+ ],
+ "aliases": {
+  "手": [
+   "両手",
+   "小指",
+   "指切り",
+   "腕"
+  ],
+  "赤": [
+   "ピンク",
+   "赤い背景",
+   "背景"
+  ]
+ },
+ "decoys": [
+  "指輪",
+  "時計",
+  "手袋",
+  "顔",
+  "帽子"
+ ],
+ "scene": "小指をつないだ2本の手（赤い背景）",
+ "person": {
+  "count": null,
+  "clothing": null,
+  "colors": [],
+  "pose": null,
+  "facing": null,
+  "hair": null,
+  "hands_visible": true,
+  "fingers_visible": null
+ },
+ "count_questions": [
+  {
+   "q": "写っている手は何本ですか？",
+   "a": 2
+  }
+ ],
+ "text_in_image": [],
+ "hard": false,
+ "labeler": "Claude Fable 5.1",
+ "labeled_at": "2026-09-14",
+ "checked_by_human": false
+}

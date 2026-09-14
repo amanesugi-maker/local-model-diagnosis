@@ -1,0 +1,86 @@
+{
+ "objects": [
+  {
+   "name": "人物",
+   "count": 1,
+   "color": null,
+   "position": "中央"
+  },
+  {
+   "name": "ブレザー",
+   "count": 1,
+   "color": "黒",
+   "position": "中央"
+  },
+  {
+   "name": "リュック",
+   "count": 1,
+   "color": "黒",
+   "position": "右"
+  },
+  {
+   "name": "ネクタイ",
+   "count": 1,
+   "color": "赤",
+   "position": "中央"
+  }
+ ],
+ "must_mention": [
+  "人物",
+  "ブレザー",
+  "リュック"
+ ],
+ "aliases": {
+  "人物": [
+   "女性",
+   "女の子",
+   "学生",
+   "少女",
+   "女子"
+  ],
+  "ブレザー": [
+   "ジャケット",
+   "制服",
+   "上着",
+   "学生服"
+  ],
+  "リュック": [
+   "バッグ",
+   "かばん",
+   "鞄",
+   "バックパック"
+  ]
+ },
+ "decoys": [
+  "帽子",
+  "眼鏡",
+  "傘",
+  "犬",
+  "椅子"
+ ],
+ "scene": "スタジオ",
+ "person": {
+  "count": 1,
+  "clothing": "ブレザー",
+  "colors": [
+   "黒",
+   "白"
+  ],
+  "pose": "立つ",
+  "facing": "正面",
+  "hair": "ロング・茶",
+  "hands_visible": true,
+  "fingers_visible": null
+ },
+ "count_questions": [
+  {
+   "q": "写っている人は何人ですか？",
+   "a": 1
+  }
+ ],
+ "text_in_image": [],
+ "hard": false,
+ "labeler": "Claude Fable 5.1",
+ "labeled_at": "2026-09-14",
+ "checked_by_human": false
+}

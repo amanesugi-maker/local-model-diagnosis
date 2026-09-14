@@ -1,0 +1,53 @@
+{
+ "objects": [
+  {
+   "name": "積み木",
+   "count": 3,
+   "color": "茶",
+   "position": "中央"
+  }
+ ],
+ "must_mention": [
+  "GPT",
+  "積み木"
+ ],
+ "aliases": {
+  "積み木": [
+   "ブロック",
+   "木",
+   "キューブ",
+   "サイコロ",
+   "文字"
+  ]
+ },
+ "decoys": [
+  "鉛筆",
+  "本",
+  "人",
+  "スマートフォン",
+  "コイン"
+ ],
+ "scene": "机の上の文字入り積み木",
+ "text_in_image": [
+  "GPT"
+ ],
+ "count_questions": [
+  {
+   "q": "積み木に書かれている文字は何ですか？",
+   "a": [
+    "GPT"
+   ]
+  },
+  {
+   "q": "積み木は何個ありますか？",
+   "a": 3
+  }
+ ],
+ "person": {
+  "count": null
+ },
+ "hard": false,
+ "labeler": "Claude Fable 5.1",
+ "labeled_at": "2026-09-14",
+ "checked_by_human": false
+}

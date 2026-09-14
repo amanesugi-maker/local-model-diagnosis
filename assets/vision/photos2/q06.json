@@ -1,0 +1,50 @@
+{
+ "objects": [
+  {
+   "name": "手",
+   "count": 2,
+   "color": null,
+   "position": "中央"
+  }
+ ],
+ "must_mention": [
+  "手"
+ ],
+ "aliases": {
+  "手": [
+   "両手",
+   "片手",
+   "指",
+   "手首"
+  ]
+ },
+ "decoys": [
+  "指輪",
+  "時計",
+  "手袋",
+  "ペン",
+  "スマートフォン"
+ ],
+ "scene": "黒い服の人が両手の親指を立てている",
+ "hard": false,
+ "person": {
+  "count": null,
+  "clothing": null,
+  "colors": [],
+  "pose": null,
+  "facing": null,
+  "hair": null,
+  "hands_visible": true,
+  "fingers_visible": 2
+ },
+ "count_questions": [
+  {
+   "q": "はっきり見えている指は全部で何本ですか？",
+   "a": 2
+  }
+ ],
+ "text_in_image": [],
+ "labeler": "Claude Fable 5.1",
+ "labeled_at": "2026-09-14",
+ "checked_by_human": false
+}

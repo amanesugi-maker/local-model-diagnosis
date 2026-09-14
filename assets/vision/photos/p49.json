@@ -1,0 +1,69 @@
+{
+ "objects": [
+  {
+   "name": "手",
+   "count": 2,
+   "color": null,
+   "position": "中央"
+  },
+  {
+   "name": "麦",
+   "count": null,
+   "color": "緑",
+   "position": "中央"
+  }
+ ],
+ "must_mention": [
+  "手",
+  "緑"
+ ],
+ "aliases": {
+  "手": [
+   "手をつな",
+   "握",
+   "つない",
+   "両手",
+   "手と手"
+  ],
+  "緑": [
+   "草",
+   "麦",
+   "畑",
+   "植物",
+   "草原",
+   "田んぼ",
+   "野原"
+  ]
+ },
+ "decoys": [
+  "指輪",
+  "時計",
+  "花",
+  "犬",
+  "空"
+ ],
+ "scene": "畑",
+ "person": {
+  "count": null,
+  "clothing": null,
+  "colors": [
+   "白"
+  ],
+  "pose": null,
+  "facing": null,
+  "hair": null,
+  "hands_visible": true,
+  "fingers_visible": null
+ },
+ "count_questions": [
+  {
+   "q": "写っている手は何本ですか？",
+   "a": 2
+  }
+ ],
+ "text_in_image": [],
+ "hard": false,
+ "labeler": "Claude Fable 5.1",
+ "labeled_at": "2026-09-14",
+ "checked_by_human": false
+}

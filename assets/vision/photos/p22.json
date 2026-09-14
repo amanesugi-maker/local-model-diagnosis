@@ -1,0 +1,60 @@
+{
+ "objects": [
+  {
+   "name": "時計",
+   "count": 1,
+   "color": "黒",
+   "position": "中央"
+  },
+  {
+   "name": "天井",
+   "count": null,
+   "color": "白",
+   "position": "中央"
+  }
+ ],
+ "must_mention": [
+  "時計",
+  "天井"
+ ],
+ "aliases": {
+  "時計": [
+   "掛け時計",
+   "アナログ",
+   "壁掛け"
+  ],
+  "天井": [
+   "壁",
+   "ボード",
+   "天井板"
+  ]
+ },
+ "decoys": [
+  "窓",
+  "人",
+  "机",
+  "絵",
+  "ランプ"
+ ],
+ "scene": "室内",
+ "hard": true,
+ "text_in_image": [
+  "QUARTZ"
+ ],
+ "count_questions": [
+  {
+   "q": "時計は何時何分を指していますか？（例 3:15 のように）",
+   "a": [
+    "8:47",
+    "8:46",
+    "8:48"
+   ]
+  }
+ ],
+ "person": {
+  "count": 0
+ },
+ "labeler": "Claude Fable 5.1",
+ "labeled_at": "2026-09-14",
+ "checked_by_human": false
+}

@@ -1,0 +1,72 @@
+{
+ "objects": [
+  {
+   "name": "柱",
+   "count": null,
+   "color": "茶",
+   "position": "中央"
+  },
+  {
+   "name": "文字",
+   "count": null,
+   "color": "黒",
+   "position": "中央"
+  },
+  {
+   "name": "空",
+   "count": null,
+   "color": "青",
+   "position": "中央"
+  }
+ ],
+ "must_mention": [
+  "柱",
+  "文字",
+  "空"
+ ],
+ "aliases": {
+  "柱": [
+   "木",
+   "板",
+   "木製",
+   "塔",
+   "壁",
+   "卒塔婆"
+  ],
+  "文字": [
+   "漢字",
+   "書",
+   "筆文字",
+   "文",
+   "経文"
+  ],
+  "空": [
+   "青空",
+   "青い空"
+  ]
+ },
+ "decoys": [
+  "人",
+  "鳥",
+  "車",
+  "花",
+  "雲"
+ ],
+ "scene": "屋外（寺）",
+ "hard": true,
+ "text_in_image": [
+  "納骨萬靈別而",
+  "納骨萬霊別而",
+  "為納骨",
+  "納骨萬靈",
+  "納骨萬霊",
+  "納骨"
+ ],
+ "count_questions": [],
+ "person": {
+  "count": 0
+ },
+ "labeler": "Claude Fable 5.1",
+ "labeled_at": "2026-09-14",
+ "checked_by_human": false
+}

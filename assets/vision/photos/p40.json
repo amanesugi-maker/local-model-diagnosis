@@ -1,0 +1,82 @@
+{
+ "objects": [
+  {
+   "name": "子ども",
+   "count": 1,
+   "color": null,
+   "position": "中央"
+  },
+  {
+   "name": "クッキー",
+   "count": 1,
+   "color": "ピンク",
+   "position": "左"
+  },
+  {
+   "name": "棒",
+   "count": 1,
+   "color": "茶",
+   "position": "左"
+  }
+ ],
+ "must_mention": [
+  "子ども",
+  "5",
+  "ピンク"
+ ],
+ "aliases": {
+  "子ども": [
+   "女の子",
+   "少女",
+   "子供",
+   "児童",
+   "幼い"
+  ],
+  "5": [
+   "５",
+   "五",
+   "数字"
+  ],
+  "ピンク": [
+   "桃色"
+  ]
+ },
+ "decoys": [
+  "犬",
+  "風船",
+  "帽子",
+  "眼鏡",
+  "ケーキ"
+ ],
+ "scene": "室内",
+ "text_in_image": [
+  "5",
+  "５"
+ ],
+ "person": {
+  "count": 1,
+  "clothing": "私服",
+  "colors": [
+   "白"
+  ],
+  "pose": null,
+  "facing": "正面",
+  "hair": null,
+  "hands_visible": true,
+  "fingers_visible": null
+ },
+ "count_questions": [
+  {
+   "q": "子どもが持っている数字は何ですか？",
+   "a": [
+    "5",
+    "５",
+    "五"
+   ]
+  }
+ ],
+ "hard": false,
+ "labeler": "Claude Fable 5.1",
+ "labeled_at": "2026-09-14",
+ "checked_by_human": false
+}

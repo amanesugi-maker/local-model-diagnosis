@@ -1,0 +1,1031 @@
+{
+ "hair_long": {
+  "kind": "hair",
+  "meta": {
+   "hair": "long"
+  },
+  "prompt": "a young Japanese woman in her early twenties, long straight black hair worn down past the shoulders, wearing a plain white t-shirt and blue jeans, standing, facing the camera, arms relaxed at sides, upper body portrait, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260914,
+  "identity_lora": 0.6,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 10:05 Claude が目視で検分（10:15 に上書き事故から当て直し）"
+ },
+ "hair_ponytail": {
+  "kind": "hair",
+  "meta": {
+   "hair": "ponytail"
+  },
+  "prompt": "a young Japanese woman in her early twenties, black hair tied in a high ponytail, wearing a plain white t-shirt and blue jeans, standing, facing the camera, arms relaxed at sides, upper body portrait, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260914,
+  "identity_lora": 0.6,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 10:05 Claude が目視で検分（10:15 に上書き事故から当て直し）"
+ },
+ "hair_bun": {
+  "kind": "hair",
+  "meta": {
+   "hair": "bun"
+  },
+  "prompt": "a young Japanese woman in her early twenties, black hair tied up in a neat bun on top of the head, wearing a plain white t-shirt and blue jeans, standing, facing the camera, arms relaxed at sides, upper body portrait, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260914,
+  "identity_lora": 0.6,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 10:05 Claude が目視で検分（10:15 に上書き事故から当て直し）"
+ },
+ "hair_twintails": {
+  "kind": "hair",
+  "meta": {
+   "hair": "twintails"
+  },
+  "prompt": "a young Japanese woman in her early twenties, black hair in two twin tails on both sides, wearing a plain white t-shirt and blue jeans, standing, facing the camera, arms relaxed at sides, upper body portrait, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260914,
+  "identity_lora": 0.6,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 10:05 Claude が目視で検分（10:15 に上書き事故から当て直し）"
+ },
+ "hair_braid": {
+  "kind": "hair",
+  "meta": {
+   "hair": "braid"
+  },
+  "prompt": "a young Japanese woman in her early twenties, black hair in a single long braid over one shoulder, wearing a plain white t-shirt and blue jeans, standing, facing the camera, arms relaxed at sides, upper body portrait, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260914,
+  "identity_lora": 0.6,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 10:05 Claude が目視で検分（10:15 に上書き事故から当て直し）"
+ },
+ "hair_bob": {
+  "kind": "hair",
+  "meta": {
+   "hair": "bob"
+  },
+  "prompt": "a young Japanese woman in her early twenties, chin-length black bob haircut with bangs, wearing a plain white t-shirt and blue jeans, standing, facing the camera, arms relaxed at sides, upper body portrait, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260914,
+  "identity_lora": 0.6,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 10:05 Claude が目視で検分（10:15 に上書き事故から当て直し）"
+ },
+ "face_front": {
+  "kind": "facing",
+  "meta": {
+   "facing": "front"
+  },
+  "prompt": "a young Japanese woman in her early twenties, long straight black hair, wearing a plain white t-shirt and blue jeans, facing the camera directly, looking at the camera, upper body, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260915,
+  "identity_lora": 0.6,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 10:05 Claude が目視で検分（10:15 に上書き事故から当て直し）"
+ },
+ "face_left": {
+  "kind": "facing",
+  "meta": {
+   "facing": "left"
+  },
+  "prompt": "a young Japanese woman in her early twenties, long straight black hair, wearing a plain white t-shirt and blue jeans, standing in full side profile facing to the left of the frame, upper body, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260915,
+  "identity_lora": 0.6,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 10:05 Claude が目視で検分（10:15 に上書き事故から当て直し）"
+ },
+ "face_right": {
+  "kind": "facing",
+  "meta": {
+   "facing": "right"
+  },
+  "prompt": "a young Japanese woman in her early twenties, long straight black hair, wearing a plain white t-shirt and blue jeans, standing in full side profile facing to the right of the frame, upper body, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260915,
+  "identity_lora": 0.6,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 10:05 Claude が目視で検分（10:15 に上書き事故から当て直し）"
+ },
+ "face_back": {
+  "kind": "facing",
+  "meta": {
+   "facing": "back"
+  },
+  "prompt": "a young Japanese woman in her early twenties, long straight black hair, wearing a plain white t-shirt and blue jeans, seen from behind, back to the camera, looking away, upper body, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260915,
+  "identity_lora": 0.6,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 10:05 Claude が目視で検分（10:15 に上書き事故から当て直し）"
+ },
+ "face_up": {
+  "kind": "facing",
+  "meta": {
+   "facing": "up"
+  },
+  "prompt": "a young Japanese woman in her early twenties, long straight black hair, wearing a plain white t-shirt and blue jeans, facing the camera, tilting the head up and looking upward at the ceiling, upper body, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260915,
+  "identity_lora": 0.6,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 10:05 Claude が目視で検分（10:15 に上書き事故から当て直し）"
+ },
+ "face_down": {
+  "kind": "facing",
+  "meta": {
+   "facing": "down"
+  },
+  "prompt": "a young Japanese woman in her early twenties, long straight black hair, wearing a plain white t-shirt and blue jeans, facing the camera, tilting the head down and looking down at the floor, upper body, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260915,
+  "identity_lora": 0.6,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 10:05 Claude が目視で検分（10:15 に上書き事故から当て直し）"
+ },
+ "same_uniform": {
+  "kind": "same_person",
+  "meta": {
+   "outfit": "uniform",
+   "person": "A"
+  },
+  "prompt": "a young Japanese woman in her early twenties, long straight black hair, wearing a Japanese school uniform with a navy blazer, white shirt, red necktie and pleated skirt, standing facing the camera, full body, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260916,
+  "identity_lora": 0.7,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 10:05 Claude が目視で検分（10:15 に上書き事故から当て直し）"
+ },
+ "same_casual": {
+  "kind": "same_person",
+  "meta": {
+   "outfit": "casual",
+   "person": "A"
+  },
+  "prompt": "a young Japanese woman in her early twenties, long straight black hair, wearing a gray hoodie and blue jeans, standing facing the camera, full body, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260916,
+  "identity_lora": 0.7,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 10:05 Claude が目視で検分（10:15 に上書き事故から当て直し）"
+ },
+ "same_kimono": {
+  "kind": "same_person",
+  "meta": {
+   "outfit": "kimono",
+   "person": "A"
+  },
+  "prompt": "a young Japanese woman in her early twenties, long straight black hair, wearing a traditional Japanese kimono with a floral pattern and an obi sash, standing facing the camera, full body, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260916,
+  "identity_lora": 0.7,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 10:05 Claude が目視で検分（10:15 に上書き事故から当て直し）"
+ },
+ "same_sports": {
+  "kind": "same_person",
+  "meta": {
+   "outfit": "sports",
+   "person": "A"
+  },
+  "prompt": "a young Japanese woman in her early twenties, long straight black hair, wearing a blue athletic sports jersey and black shorts, standing facing the camera, full body, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260916,
+  "identity_lora": 0.7,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 10:05 Claude が目視で検分（10:15 に上書き事故から当て直し）"
+ },
+ "other_uniform_1": {
+  "kind": "other_person",
+  "meta": {
+   "outfit": "uniform",
+   "person": "B1"
+  },
+  "prompt": "a young Japanese woman in her early twenties, long straight black hair, wearing a Japanese school uniform with a navy blazer, white shirt, red necktie and pleated skirt, standing facing the camera, full body, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260927,
+  "identity_lora": 0.0,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 11:25 Claude目視: other_combo=40代・そばかすの別人（髪型・服・正面は指定どおり）／other_uniform=同seed再生成・制服・文字なし"
+ },
+ "other_uniform_2": {
+  "kind": "other_person",
+  "meta": {
+   "outfit": "uniform",
+   "person": "B2"
+  },
+  "prompt": "a young Japanese woman in her early twenties, long straight black hair, wearing a Japanese school uniform with a navy blazer, white shirt, red necktie and pleated skirt, standing facing the camera, full body, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260938,
+  "identity_lora": 0.0,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 11:25 Claude目視: other_combo=40代・そばかすの別人（髪型・服・正面は指定どおり）／other_uniform=同seed再生成・制服・文字なし"
+ },
+ "other_uniform_3": {
+  "kind": "other_person",
+  "meta": {
+   "outfit": "uniform",
+   "person": "B3"
+  },
+  "prompt": "a young Japanese woman in her early twenties, long straight black hair, wearing a Japanese school uniform with a navy blazer, white shirt, red necktie and pleated skirt, standing facing the camera, full body, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260949,
+  "identity_lora": 0.0,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 11:25 Claude目視: other_combo=40代・そばかすの別人（髪型・服・正面は指定どおり）／other_uniform=同seed再生成・制服・文字なし"
+ },
+ "pair_cup_right": {
+  "kind": "pair",
+  "meta": {
+   "variant": "cup_right",
+   "pair": "cup"
+  },
+  "prompt": "a young Japanese woman in her early twenties, long straight black hair, wearing a plain white t-shirt and blue jeans, holding a white coffee cup in her right hand, left hand relaxed, standing facing the camera, upper body, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260917,
+  "identity_lora": 0.6,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 10:05 Claude が目視で検分（10:15 に上書き事故から当て直し）"
+ },
+ "pair_cup_left": {
+  "kind": "pair",
+  "meta": {
+   "variant": "cup_left",
+   "pair": "cup"
+  },
+  "prompt": "a young Japanese woman in her early twenties, long straight black hair, wearing a plain white t-shirt and blue jeans, holding a white coffee cup in her left hand, right hand relaxed, standing facing the camera, upper body, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260917,
+  "identity_lora": 0.6,
+  "checked_by_human": false,
+  "verified_by_claude": false,
+  "verify_note": "2026-09-14 10:05 Claude が目視で検分（10:15 に上書き事故から当て直し）・実物は右手＝pair_cup_right と差が無い"
+ },
+ "pair_cap_on": {
+  "kind": "pair",
+  "meta": {
+   "variant": "cap_on",
+   "pair": "cap"
+  },
+  "prompt": "a young Japanese woman in her early twenties, long straight black hair, wearing a plain white t-shirt and blue jeans, wearing a black baseball cap, standing facing the camera, upper body, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260917,
+  "identity_lora": 0.6,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 10:05 Claude が目視で検分（10:15 に上書き事故から当て直し）"
+ },
+ "pair_cap_off": {
+  "kind": "pair",
+  "meta": {
+   "variant": "cap_off",
+   "pair": "cap"
+  },
+  "prompt": "a young Japanese woman in her early twenties, long straight black hair, wearing a plain white t-shirt and blue jeans, no hat, bare head, standing facing the camera, upper body, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260917,
+  "identity_lora": 0.6,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 10:05 Claude が目視で検分（10:15 に上書き事故から当て直し）"
+ },
+ "pair_glasses_on": {
+  "kind": "pair",
+  "meta": {
+   "variant": "glasses_on",
+   "pair": "glasses"
+  },
+  "prompt": "a young Japanese woman in her early twenties, long straight black hair, wearing a plain white t-shirt and blue jeans, wearing black-framed glasses, standing facing the camera, upper body, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260917,
+  "identity_lora": 0.6,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 10:05 Claude が目視で検分（10:15 に上書き事故から当て直し）"
+ },
+ "pair_glasses_off": {
+  "kind": "pair",
+  "meta": {
+   "variant": "glasses_off",
+   "pair": "glasses"
+  },
+  "prompt": "a young Japanese woman in her early twenties, long straight black hair, wearing a plain white t-shirt and blue jeans, no glasses, standing facing the camera, upper body, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260917,
+  "identity_lora": 0.6,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 10:05 Claude が目視で検分（10:15 に上書き事故から当て直し）"
+ },
+ "pair_scarf_on": {
+  "kind": "pair",
+  "meta": {
+   "variant": "scarf_on",
+   "pair": "scarf"
+  },
+  "prompt": "a young Japanese woman in her early twenties, long straight black hair, wearing a plain white t-shirt and blue jeans, wearing a red scarf around the neck, standing facing the camera, upper body, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260917,
+  "identity_lora": 0.6,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 10:05 Claude が目視で検分（10:15 に上書き事故から当て直し）"
+ },
+ "pair_scarf_off": {
+  "kind": "pair",
+  "meta": {
+   "variant": "scarf_off",
+   "pair": "scarf"
+  },
+  "prompt": "a young Japanese woman in her early twenties, long straight black hair, wearing a plain white t-shirt and blue jeans, nothing around the neck, standing facing the camera, upper body, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260917,
+  "identity_lora": 0.6,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 10:05 Claude が目視で検分（10:15 に上書き事故から当て直し）"
+ },
+ "pair_phone": {
+  "kind": "pair",
+  "meta": {
+   "variant": "phone",
+   "pair": "hold"
+  },
+  "prompt": "a young Japanese woman in her early twenties, long straight black hair, wearing a plain white t-shirt and blue jeans, holding a smartphone in both hands in front of the chest, standing facing the camera, upper body, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260917,
+  "identity_lora": 0.6,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 10:05 Claude が目視で検分（10:15 に上書き事故から当て直し）"
+ },
+ "pair_book": {
+  "kind": "pair",
+  "meta": {
+   "variant": "book",
+   "pair": "hold"
+  },
+  "prompt": "a young Japanese woman in her early twenties, long straight black hair, wearing a plain white t-shirt and blue jeans, holding a closed book in both hands in front of the chest, standing facing the camera, upper body, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260917,
+  "identity_lora": 0.6,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 10:05 Claude が目視で検分（10:15 に上書き事故から当て直し）"
+ },
+ "pair_arms_crossed": {
+  "kind": "pair",
+  "meta": {
+   "variant": "arms_crossed",
+   "pair": "arms"
+  },
+  "prompt": "a young Japanese woman in her early twenties, long straight black hair, wearing a plain white t-shirt and blue jeans, standing with arms crossed, standing facing the camera, upper body, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260917,
+  "identity_lora": 0.6,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 10:05 Claude が目視で検分（10:15 に上書き事故から当て直し）"
+ },
+ "pair_hands_pockets": {
+  "kind": "pair",
+  "meta": {
+   "variant": "hands_pockets",
+   "pair": "arms"
+  },
+  "prompt": "a young Japanese woman in her early twenties, long straight black hair, wearing a plain white t-shirt and blue jeans, standing with both hands in the jeans pockets, standing facing the camera, upper body, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260917,
+  "identity_lora": 0.6,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 10:05 Claude が目視で検分（10:15 に上書き事故から当て直し）"
+ },
+ "hold_right_cup": {
+  "kind": "hold",
+  "meta": {
+   "hand": "right",
+   "object": "cup"
+  },
+  "prompt": "a young Japanese woman in her early twenties, long straight black hair, wearing a plain white t-shirt and blue jeans, holding a white coffee cup in her right hand, standing facing the camera, upper body, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20261017,
+  "identity_lora": 0.6,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 10:05 Claude が目視で検分（10:15 に上書き事故から当て直し）"
+ },
+ "hold_left_phone": {
+  "kind": "hold",
+  "meta": {
+   "hand": "left",
+   "object": "phone"
+  },
+  "prompt": "a young Japanese woman in her early twenties, long straight black hair, wearing a plain white t-shirt and blue jeans, holding a smartphone in her left hand, standing facing the camera, upper body, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20261018,
+  "identity_lora": 0.6,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 10:05 Claude が目視で検分（10:15 に上書き事故から当て直し）・実物は右手",
+  "override": {
+   "hand": "right"
+  }
+ },
+ "hold_left_book": {
+  "kind": "hold",
+  "meta": {
+   "hand": "left",
+   "object": "book"
+  },
+  "prompt": "a young Japanese woman in her early twenties, long straight black hair, wearing a plain white t-shirt and blue jeans, holding a book in her left hand, standing facing the camera, upper body, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20261019,
+  "identity_lora": 0.6,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 10:05 Claude が目視で検分（10:15 に上書き事故から当て直し）・実物は右手",
+  "override": {
+   "hand": "right"
+  }
+ },
+ "hold_right_umbrella": {
+  "kind": "hold",
+  "meta": {
+   "hand": "right",
+   "object": "umbrella"
+  },
+  "prompt": "a young Japanese woman in her early twenties, long straight black hair, wearing a plain white t-shirt and blue jeans, holding a closed umbrella in her right hand, standing facing the camera, upper body, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20261020,
+  "identity_lora": 0.6,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 10:05 Claude が目視で検分（10:15 に上書き事故から当て直し）"
+ },
+ "combo_01": {
+  "kind": "combo",
+  "meta": {
+   "hair": "ponytail",
+   "outfit": "kimono",
+   "facing": "left",
+   "pose": "sit",
+   "person": "A",
+   "hand": "right",
+   "object": "cup"
+  },
+  "prompt": "a young Japanese woman in her early twenties, black hair in a high ponytail, wearing a traditional Japanese floral kimono with an obi sash, sitting on a wooden chair, in side profile facing to the left of the frame, holding a white coffee cup in her right hand, full body, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260930,
+  "identity_lora": 0.7,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 10:05 Claude が目視で検分・横顔で持ち手が判別できず→持ち手の問いから外す",
+  "override": {
+   "hand": null,
+   "object": null
+  }
+ },
+ "combo_02": {
+  "kind": "combo",
+  "meta": {
+   "hair": "bun",
+   "outfit": "suit",
+   "facing": "front",
+   "pose": "stand",
+   "person": "A",
+   "hand": "left",
+   "object": "phone"
+  },
+  "prompt": "a young Japanese woman in her early twenties, black hair tied up in a bun, wearing a dark business suit with a white blouse, standing, facing the camera directly, holding a smartphone in her left hand, upper body, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260931,
+  "identity_lora": 0.7,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 10:05 Claude が目視で検分・両手でスマホ→持ち手の問いから外す",
+  "override": {
+   "hand": null,
+   "object": null
+  }
+ },
+ "combo_03": {
+  "kind": "combo",
+  "meta": {
+   "hair": "twintails",
+   "outfit": "sailor",
+   "facing": "right",
+   "pose": "stand",
+   "person": "A",
+   "hand": "left",
+   "object": "book"
+  },
+  "prompt": "a young Japanese woman in her early twenties, black hair in twin tails, wearing a Japanese sailor-style school uniform with a red ribbon, standing, in side profile facing to the right of the frame, holding a book in her left hand, upper body, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260932,
+  "identity_lora": 0.7,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 10:05 Claude が目視で検分"
+ },
+ "combo_04": {
+  "kind": "combo",
+  "meta": {
+   "hair": "braid",
+   "outfit": "casual",
+   "facing": "down",
+   "pose": "sit",
+   "person": "A",
+   "hand": "right",
+   "object": "umbrella"
+  },
+  "prompt": "a young Japanese woman in her early twenties, black hair in a single braid over one shoulder, wearing a gray hoodie and blue jeans, sitting on a wooden chair, facing the camera and looking downward, holding a closed umbrella in her right hand, full body, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260933,
+  "identity_lora": 0.7,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 10:05 Claude が目視で検分"
+ },
+ "combo_05": {
+  "kind": "combo",
+  "meta": {
+   "hair": "bob",
+   "outfit": "scrubs",
+   "facing": "up",
+   "pose": "stand",
+   "person": "A"
+  },
+  "prompt": "a young Japanese woman in her early twenties, chin-length black bob haircut, wearing light blue medical scrubs with a stethoscope, standing, facing the camera and looking upward, upper body, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260934,
+  "identity_lora": 0.7,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 10:05 Claude が目視で検分・視線は上とは言い切れない→正面（視線の問いから外す）",
+  "override": {
+   "facing": "front"
+  }
+ },
+ "combo_06": {
+  "kind": "combo",
+  "meta": {
+   "hair": "long",
+   "outfit": "gi",
+   "facing": "front",
+   "pose": "raise",
+   "person": "A"
+  },
+  "prompt": "a young Japanese woman in her early twenties, long straight black hair worn down, wearing a white karate gi with a blue belt, raising one hand high above the head, facing the camera directly, upper body, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260935,
+  "identity_lora": 0.7,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 10:05 Claude が目視で検分"
+ },
+ "combo_07": {
+  "kind": "combo",
+  "meta": {
+   "hair": "ponytail",
+   "outfit": "sports",
+   "facing": "front",
+   "pose": "jump",
+   "person": "A"
+  },
+  "prompt": "a young Japanese woman in her early twenties, black hair in a high ponytail, wearing a blue athletic jersey and black shorts, jumping in the air, facing the camera directly, full body, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260936,
+  "identity_lora": 0.7,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 10:05 Claude が目視で検分"
+ },
+ "combo_08": {
+  "kind": "combo",
+  "meta": {
+   "hair": "bun",
+   "outfit": "casual",
+   "facing": "back",
+   "pose": "walk",
+   "person": "A"
+  },
+  "prompt": "a young Japanese woman in her early twenties, black hair tied up in a bun, wearing a gray hoodie and blue jeans, walking forward, seen from behind with the back to the camera, full body, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260937,
+  "identity_lora": 0.7,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 10:05 Claude が目視で検分"
+ },
+ "combo_09": {
+  "kind": "combo",
+  "meta": {
+   "hair": "bob",
+   "outfit": "uniform",
+   "facing": "left",
+   "pose": "walk",
+   "person": "A",
+   "hand": "right",
+   "object": "cup"
+  },
+  "prompt": "a young Japanese woman in her early twenties, chin-length black bob haircut, wearing a Japanese school uniform with navy blazer, white shirt and red necktie, walking forward, in side profile facing to the left of the frame, holding a white coffee cup in her right hand, full body, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260938,
+  "identity_lora": 0.7,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 10:05 Claude が目視で検分"
+ },
+ "combo_10": {
+  "kind": "combo",
+  "meta": {
+   "hair": "braid",
+   "outfit": "kimono",
+   "facing": "front",
+   "pose": "stand",
+   "person": "A",
+   "hand": "left",
+   "object": "phone"
+  },
+  "prompt": "a young Japanese woman in her early twenties, black hair in a single braid over one shoulder, wearing a traditional Japanese floral kimono with an obi sash, standing, facing the camera directly, holding a smartphone in her left hand, upper body, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260939,
+  "identity_lora": 0.7,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 10:05 Claude が目視で検分"
+ },
+ "combo_11": {
+  "kind": "combo",
+  "meta": {
+   "hair": "twintails",
+   "outfit": "suit",
+   "facing": "down",
+   "pose": "sit",
+   "person": "A"
+  },
+  "prompt": "a young Japanese woman in her early twenties, black hair in twin tails, wearing a dark business suit with a white blouse, sitting on a wooden chair, facing the camera and looking downward, full body, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260940,
+  "identity_lora": 0.7,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 10:05 Claude が目視で検分・下を向いていない→正面",
+  "override": {
+   "facing": "front"
+  }
+ },
+ "combo_12": {
+  "kind": "combo",
+  "meta": {
+   "hair": "long",
+   "outfit": "sailor",
+   "facing": "right",
+   "pose": "stand",
+   "person": "A",
+   "hand": "right",
+   "object": "umbrella"
+  },
+  "prompt": "a young Japanese woman in her early twenties, long straight black hair worn down, wearing a Japanese sailor-style school uniform with a red ribbon, standing, in side profile facing to the right of the frame, holding a closed umbrella in her right hand, upper body, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260941,
+  "identity_lora": 0.7,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 10:05 Claude が目視で検分・傘は左手（プロンプトは右手）",
+  "override": {
+   "hand": "left"
+  }
+ },
+ "other_combo_1": {
+  "kind": "other_person",
+  "meta": {
+   "hair": "ponytail",
+   "outfit": "kimono",
+   "facing": "front",
+   "pose": "stand",
+   "person": "C1"
+  },
+  "prompt": "a Japanese woman in her late 40s, round face, thick straight eyebrows, narrow eyes, freckles, prominent cheekbones, no makeup, photorealistic, black hair in a high ponytail, wearing a traditional Japanese floral kimono with an obi sash, standing, facing the camera directly, upper body, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260960,
+  "identity_lora": 0.0,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 11:25 Claude目視: other_combo=40代・そばかすの別人（髪型・服・正面は指定どおり）／other_uniform=同seed再生成・制服・文字なし"
+ },
+ "other_combo_2": {
+  "kind": "other_person",
+  "meta": {
+   "hair": "bun",
+   "outfit": "suit",
+   "facing": "front",
+   "pose": "stand",
+   "person": "C2"
+  },
+  "prompt": "a Japanese woman in her late 40s, round face, thick straight eyebrows, narrow eyes, freckles, prominent cheekbones, no makeup, photorealistic, black hair tied up in a bun, wearing a dark business suit with a white blouse, standing, facing the camera directly, upper body, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260961,
+  "identity_lora": 0.0,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 11:25 Claude目視: other_combo=40代・そばかすの別人（髪型・服・正面は指定どおり）／other_uniform=同seed再生成・制服・文字なし"
+ },
+ "other_combo_3": {
+  "kind": "other_person",
+  "meta": {
+   "hair": "twintails",
+   "outfit": "sailor",
+   "facing": "front",
+   "pose": "stand",
+   "person": "C3"
+  },
+  "prompt": "a Japanese woman in her late 40s, round face, thick straight eyebrows, narrow eyes, freckles, prominent cheekbones, no makeup, photorealistic, black hair in twin tails, wearing a Japanese sailor-style school uniform with a red ribbon, standing, facing the camera directly, upper body, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260962,
+  "identity_lora": 0.0,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 11:25 Claude目視: other_combo=40代・そばかすの別人（髪型・服・正面は指定どおり）／other_uniform=同seed再生成・制服・文字なし"
+ },
+ "hold_left_phone_mirror": {
+  "kind": "hold",
+  "meta": {
+   "hand": "left",
+   "object": "phone"
+  },
+  "prompt": "mirror of hold_left_phone",
+  "seed": 20261018,
+  "identity_lora": 0.6,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 10:05 Claude が目視で検分（10:15 に上書き事故から当て直し）・鏡像＝左手が正解"
+ },
+ "hold_left_book_mirror": {
+  "kind": "hold",
+  "meta": {
+   "hand": "left",
+   "object": "book"
+  },
+  "prompt": "mirror of hold_left_book",
+  "seed": 20261019,
+  "identity_lora": 0.6,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 10:05 Claude が目視で検分（10:15 に上書き事故から当て直し）・鏡像＝左手が正解"
+ },
+ "hold_right_cup_mirror": {
+  "kind": "hold",
+  "meta": {
+   "hand": "left",
+   "object": "cup"
+  },
+  "prompt": "mirror of hold_right_cup",
+  "seed": 20261017,
+  "identity_lora": 0.6,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 10:05 Claude が目視で検分（10:15 に上書き事故から当て直し）・鏡像＝左手が正解"
+ },
+ "hp_two_umbrella": {
+  "kind": "hard_person",
+  "meta": {
+   "count": 2,
+   "qs": [
+    {
+     "k": "who",
+     "q": "この写真で赤い傘を持っているのは、向かって左の人と右の人のどちらですか。「左」か「右」で答えてください。",
+     "a": "左"
+    },
+    {
+     "k": "count",
+     "q": "この写真には人が何人写っていますか。数字だけを答えてください。",
+     "a": 2
+    }
+   ]
+  },
+  "prompt": "two young Japanese women standing side by side, the woman on the left holding a closed red umbrella, the woman on the right holding a closed book with both hands, both wearing a plain white t-shirt and blue jeans, facing the camera, upper body, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260970,
+  "identity_lora": 0.0,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 12:40 Claude目視: 左右・人数・表情・隠れを確認／右の人も白い傘を持って生成されたので問いを「赤い傘」に限定"
+ },
+ "hp_three_hat": {
+  "kind": "hard_person",
+  "meta": {
+   "count": 3,
+   "qs": [
+    {
+     "k": "who3",
+     "q": "この写真で帽子をかぶっているのは、向かって左・中央・右のどの人ですか。一語で答えてください。",
+     "a": "中央",
+     "alts": [
+      "真ん中",
+      "中央"
+     ]
+    },
+    {
+     "k": "count",
+     "q": "この写真には人が何人写っていますか。数字だけを答えてください。",
+     "a": 3
+    }
+   ]
+  },
+  "prompt": "three young Japanese women standing in a row, only the woman in the middle wearing a black baseball cap, the other two bare-headed, all wearing a plain white t-shirt and blue jeans, facing the camera, upper body, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260971,
+  "identity_lora": 0.0,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 12:40 Claude目視: 左右・人数・表情・隠れを確認"
+ },
+ "hp_watch_left": {
+  "kind": "hard_person",
+  "meta": {
+   "count": 1,
+   "qs": [
+    {
+     "k": "lr",
+     "q": "この写真の人物は腕時計をどちらの手首につけていますか。「左」か「右」で答えてください。",
+     "a": "左"
+    }
+   ]
+  },
+  "prompt": "a young Japanese woman, long straight black hair, wearing a plain white t-shirt and blue jeans, wearing a silver wristwatch on her left wrist, both hands raised in front of the chest with palms facing the camera, facing the camera, upper body, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260972,
+  "identity_lora": 0.6,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 12:40 Claude目視: 左右・人数・表情・隠れを確認"
+ },
+ "hp_bag_right": {
+  "kind": "hard_person",
+  "meta": {
+   "count": 1,
+   "qs": [
+    {
+     "k": "lr",
+     "q": "この写真の人物はバッグをどちらの肩にかけていますか。「左」か「右」で答えてください。",
+     "a": "右"
+    }
+   ]
+  },
+  "prompt": "a young Japanese woman, black hair in a ponytail, wearing a beige trench coat, a brown leather shoulder bag hanging from her right shoulder, facing the camera, upper body, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260973,
+  "identity_lora": 0.6,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 12:40 Claude目視: 左右・人数・表情・隠れを確認"
+ },
+ "hp_glasses_none": {
+  "kind": "hard_person",
+  "meta": {
+   "count": 1,
+   "qs": [
+    {
+     "k": "yesno",
+     "q": "この写真の人物は眼鏡をかけていますか。「はい」か「いいえ」で答えてください。",
+     "a": "いいえ"
+    },
+    {
+     "k": "gaze",
+     "q": "この写真の人物の視線はどこを向いていますか（上・下・正面 のどれか）。一語で答えてください。",
+     "a": "下"
+    }
+   ]
+  },
+  "prompt": "a young Japanese woman, chin-length black bob haircut, no glasses, wearing a plain white t-shirt and blue jeans, holding a smartphone in both hands and looking at it, facing the camera, upper body, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260974,
+  "identity_lora": 0.6,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 12:40 Claude目視: 左右・人数・表情・隠れを確認"
+ },
+ "hp_elderly": {
+  "kind": "hard_person",
+  "meta": {
+   "count": 1,
+   "qs": [
+    {
+     "k": "age",
+     "q": "この写真の人物の年齢層はどれですか（子ども・若者・中年・高齢者 のどれか）。一語で答えてください。",
+     "a": "高齢者",
+     "alts": [
+      "高齢",
+      "年配",
+      "お年寄り",
+      "老人",
+      "シニア"
+     ]
+    }
+   ]
+  },
+  "prompt": "a Japanese woman in her seventies with short gray hair and wrinkles, wearing a beige cardigan, smiling gently, facing the camera, upper body portrait, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260975,
+  "identity_lora": 0.0,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 12:40 Claude目視: 左右・人数・表情・隠れを確認"
+ },
+ "hp_back_view": {
+  "kind": "hard_person",
+  "meta": {
+   "count": 1,
+   "qs": [
+    {
+     "k": "facing",
+     "q": "この写真の人物はどちらを向いていますか（正面・左・右・後ろ のどれか）。一語で答えてください。",
+     "a": "後ろ"
+    }
+   ]
+  },
+  "prompt": "a young Japanese woman, long straight black hair, wearing a plain white t-shirt and blue jeans, seen from directly behind with her back to the camera, one arm raised straight up above her head, upper body, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260976,
+  "identity_lora": 0.6,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 12:40 Claude目視: 左右・人数・表情・隠れを確認"
+ },
+ "hp_occluded": {
+  "kind": "hard_person",
+  "meta": {
+   "count": 1,
+   "qs": [
+    {
+     "k": "count_hands",
+     "q": "この写真で見えている手は何本ですか。数字だけを答えてください。",
+     "a": 1
+    }
+   ]
+  },
+  "prompt": "a young Japanese woman, long straight black hair, wearing a plain white t-shirt and blue jeans, standing behind a tall wooden counter that hides her body below the chest, only her head, shoulders and her right hand resting on the counter are visible, the left arm hidden behind the counter, facing the camera, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260977,
+  "identity_lora": 0.6,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 12:40 Claude目視: 左右・人数・表情・隠れを確認"
+ },
+ "hp_surprise": {
+  "kind": "hard_person",
+  "meta": {
+   "count": 1,
+   "qs": [
+    {
+     "k": "expr",
+     "q": "この写真の人物の表情はどれですか（笑顔・怒り・驚き・悲しみ・無表情 のどれか）。一語で答えてください。",
+     "a": "驚き",
+     "alts": [
+      "驚",
+      "びっくり"
+     ]
+    }
+   ]
+  },
+  "prompt": "a young Japanese woman, black hair in a ponytail, wearing a plain white t-shirt and blue jeans, very surprised expression with wide open eyes and open mouth, both hands on the cheeks, facing the camera, upper body, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260978,
+  "identity_lora": 0.6,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 12:40 Claude目視: 左右・人数・表情・隠れを確認"
+ },
+ "hp_angry": {
+  "kind": "hard_person",
+  "meta": {
+   "count": 1,
+   "qs": [
+    {
+     "k": "expr",
+     "q": "この写真の人物の表情はどれですか（笑顔・怒り・驚き・悲しみ・無表情 のどれか）。一語で答えてください。",
+     "a": "怒り",
+     "alts": [
+      "怒",
+      "不機嫌"
+     ]
+    }
+   ]
+  },
+  "prompt": "a young Japanese woman in her early twenties, chin-length black bob haircut, wearing a plain white t-shirt and blue jeans, furious angry expression, shouting, deeply furrowed eyebrows drawn together, glaring eyes, teeth bared, both fists clenched at chest level, facing the camera, upper body, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260990,
+  "identity_lora": 0.6,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 12:50 Claude目視: 叫び顔・両拳＝怒りで確定（初版は驚きに見えた）"
+ },
+ "hp_side_phone": {
+  "kind": "hard_person",
+  "meta": {
+   "count": 1,
+   "qs": [
+    {
+     "k": "hold",
+     "q": "この写真の人物は、どちらの手に何を持っていますか。「右手にコップ」のように答えてください。",
+     "a": {
+      "hand": "right",
+      "object": "phone"
+     }
+    }
+   ]
+  },
+  "prompt": "a young Japanese woman, long straight black hair, wearing a plain white t-shirt and blue jeans, body turned three-quarters to the left of the frame, holding a smartphone up to her right ear with her right hand as if on a call, left arm relaxed, upper body, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260980,
+  "identity_lora": 0.6,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 12:40 Claude目視: 左右・人数・表情・隠れを確認"
+ },
+ "hp_two_hair": {
+  "kind": "hard_person",
+  "meta": {
+   "count": 2,
+   "qs": [
+    {
+     "k": "who",
+     "q": "この写真でポニーテールなのは、向かって左の人と右の人のどちらですか。「左」か「右」で答えてください。",
+     "a": "左"
+    },
+    {
+     "k": "count",
+     "q": "この写真には人が何人写っていますか。数字だけを答えてください。",
+     "a": 2
+    }
+   ]
+  },
+  "prompt": "two young Japanese women standing side by side wearing the same Japanese school uniform with navy blazer and red necktie, the woman on the left with black hair in a high ponytail, the woman on the right with a chin-length black bob haircut, facing the camera, upper body, plain light gray seamless studio background, soft even studio lighting, photorealistic photo, sharp focus",
+  "seed": 20260981,
+  "identity_lora": 0.0,
+  "checked_by_human": false,
+  "verified_by_claude": true,
+  "verify_note": "2026-09-14 12:40 Claude目視: 左右・人数・表情・隠れを確認"
+ }
+}

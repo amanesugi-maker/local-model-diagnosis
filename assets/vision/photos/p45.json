@@ -1,0 +1,79 @@
+{
+ "objects": [
+  {
+   "name": "人物",
+   "count": 1,
+   "color": null,
+   "position": "中央"
+  },
+  {
+   "name": "花",
+   "count": 1,
+   "color": "白",
+   "position": "左"
+  },
+  {
+   "name": "ネックレス",
+   "count": 1,
+   "color": null,
+   "position": "中央"
+  }
+ ],
+ "must_mention": [
+  "人物",
+  "花",
+  "ネックレス"
+ ],
+ "aliases": {
+  "人物": [
+   "女性",
+   "女の人",
+   "女の子"
+  ],
+  "花": [
+   "髪飾り",
+   "デイジー",
+   "マーガレット",
+   "白い花"
+  ],
+  "ネックレス": [
+   "首飾り",
+   "ビーズ",
+   "アクセサリー"
+  ]
+ },
+ "decoys": [
+  "帽子",
+  "眼鏡",
+  "犬",
+  "鉛筆",
+  "傘"
+ ],
+ "scene": "室内",
+ "person": {
+  "count": 1,
+  "clothing": "私服",
+  "colors": [
+   "白"
+  ],
+  "pose": null,
+  "facing": "正面",
+  "hair": "お団子・黒",
+  "hands_visible": false,
+  "fingers_visible": null
+ },
+ "count_questions": [
+  {
+   "q": "髪に付いている花は何輪ですか？",
+   "a": 1
+  }
+ ],
+ "text_in_image": [],
+ "hard": false,
+ "labeler": "Claude Fable 5.1",
+ "labeled_at": "2026-09-14",
+ "checked_by_human": false,
+ "fix_log": [
+  "2026-09-14 08:05 囮「本」は助数詞と衝突するので差し替え"
+ ]
+}

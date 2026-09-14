@@ -1,0 +1,70 @@
+{
+ "objects": [
+  {
+   "name": "人物",
+   "count": 1,
+   "color": null,
+   "position": "中央"
+  },
+  {
+   "name": "ジャケット",
+   "count": 1,
+   "color": "緑",
+   "position": "中央"
+  }
+ ],
+ "must_mention": [
+  "人物",
+  "緑",
+  "ポニーテール"
+ ],
+ "aliases": {
+  "人物": [
+   "女性",
+   "女の人"
+  ],
+  "緑": [
+   "グリーン",
+   "黄緑",
+   "ミント"
+  ],
+  "ポニーテール": [
+   "結ん",
+   "束ね",
+   "ポニー",
+   "一つ結び",
+   "ひとつ結び"
+  ]
+ },
+ "decoys": [
+  "帽子",
+  "眼鏡",
+  "犬",
+  "椅子",
+  "花"
+ ],
+ "scene": "スタジオ",
+ "person": {
+  "count": 1,
+  "clothing": "ブレザー",
+  "colors": [
+   "緑"
+  ],
+  "pose": "振り向く",
+  "facing": "後ろ",
+  "hair": "ロング・金・ポニーテール",
+  "hands_visible": false,
+  "fingers_visible": null
+ },
+ "count_questions": [
+  {
+   "q": "写っている人は何人ですか？",
+   "a": 1
+  }
+ ],
+ "text_in_image": [],
+ "hard": false,
+ "labeler": "Claude Fable 5.1",
+ "labeled_at": "2026-09-14",
+ "checked_by_human": false
+}

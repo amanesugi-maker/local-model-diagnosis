@@ -1,0 +1,76 @@
+{
+ "objects": [
+  {
+   "name": "人物",
+   "count": 1,
+   "color": null,
+   "position": "中央"
+  },
+  {
+   "name": "ドレス",
+   "count": 1,
+   "color": "白",
+   "position": "中央"
+  },
+  {
+   "name": "葉",
+   "count": null,
+   "color": "緑",
+   "position": "中央"
+  }
+ ],
+ "must_mention": [
+  "人物",
+  "ドレス",
+  "黒髪"
+ ],
+ "aliases": {
+  "人物": [
+   "女性",
+   "女の人"
+  ],
+  "ドレス": [
+   "ワンピース",
+   "白い服",
+   "服",
+   "クリーム色"
+  ],
+  "黒髪": [
+   "黒い髪",
+   "長い髪",
+   "ロング",
+   "髪"
+  ]
+ },
+ "decoys": [
+  "帽子",
+  "眼鏡",
+  "犬",
+  "猫",
+  "傘"
+ ],
+ "scene": "室内",
+ "person": {
+  "count": 1,
+  "clothing": "私服",
+  "colors": [
+   "白"
+  ],
+  "pose": "座る",
+  "facing": "左",
+  "hair": "ロング・黒",
+  "hands_visible": true,
+  "fingers_visible": null
+ },
+ "count_questions": [
+  {
+   "q": "写っている人は何人ですか？",
+   "a": 1
+  }
+ ],
+ "text_in_image": [],
+ "hard": false,
+ "labeler": "Claude Fable 5.1",
+ "labeled_at": "2026-09-14",
+ "checked_by_human": false
+}

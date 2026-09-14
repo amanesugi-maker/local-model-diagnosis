@@ -1,0 +1,53 @@
+{
+ "objects": [
+  {
+   "name": "葉",
+   "count": 1,
+   "color": "黄",
+   "position": "中央"
+  },
+  {
+   "name": "枝",
+   "count": null,
+   "color": "茶",
+   "position": "中央"
+  }
+ ],
+ "must_mention": [
+  "葉",
+  "枝"
+ ],
+ "aliases": {
+  "葉": [
+   "葉っぱ",
+   "落ち葉",
+   "木の葉"
+  ],
+  "枝": [
+   "小枝",
+   "木"
+  ]
+ },
+ "decoys": [
+  "花",
+  "鳥",
+  "実",
+  "雪",
+  "雲"
+ ],
+ "scene": "林",
+ "hard": true,
+ "count_questions": [
+  {
+   "q": "はっきり写っている黄色い葉は何枚ですか？",
+   "a": 1
+  }
+ ],
+ "person": {
+  "count": 0
+ },
+ "text_in_image": [],
+ "labeler": "Claude Fable 5.1",
+ "labeled_at": "2026-09-14",
+ "checked_by_human": false
+}

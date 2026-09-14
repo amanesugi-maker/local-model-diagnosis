@@ -1,0 +1,91 @@
+{
+ "objects": [
+  {
+   "name": "女性",
+   "count": 5,
+   "color": null,
+   "position": "中央"
+  },
+  {
+   "name": "提灯",
+   "count": null,
+   "color": "赤",
+   "position": "中央"
+  },
+  {
+   "name": "旗",
+   "count": null,
+   "color": null,
+   "position": "中央"
+  },
+  {
+   "name": "笠",
+   "count": 2,
+   "color": "黄",
+   "position": "中央"
+  }
+ ],
+ "must_mention": [
+  "女性",
+  "提灯",
+  "旗"
+ ],
+ "aliases": {
+  "女性": [
+   "人物",
+   "5人",
+   "五人",
+   "女の人",
+   "人が"
+  ],
+  "提灯": [
+   "ランタン",
+   "灯籠",
+   "ちょうちん"
+  ],
+  "旗": [
+   "フラッグ",
+   "ガーランド",
+   "三角旗",
+   "国旗"
+  ]
+ },
+ "decoys": [
+  "犬",
+  "自転車",
+  "傘",
+  "車",
+  "雪"
+ ],
+ "scene": "街（祭り）",
+ "hard": true,
+ "has_unreadable_text": true,
+ "person": {
+  "count": 5,
+  "clothing": null,
+  "colors": [
+   "赤",
+   "緑",
+   "紫"
+  ],
+  "pose": "立つ",
+  "facing": "正面",
+  "hair": null,
+  "hands_visible": true,
+  "fingers_visible": null
+ },
+ "count_questions": [
+  {
+   "q": "写っている人は何人ですか？",
+   "a": 5
+  },
+  {
+   "q": "円錐形の帽子（笠）をかぶっている人は何人ですか？",
+   "a": 2
+  }
+ ],
+ "text_in_image": [],
+ "labeler": "Claude Fable 5.1",
+ "labeled_at": "2026-09-14",
+ "checked_by_human": false
+}

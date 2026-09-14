@@ -1,0 +1,59 @@
+{
+ "objects": [
+  {
+   "name": "手",
+   "count": 2,
+   "color": null,
+   "position": "中央"
+  }
+ ],
+ "must_mention": [
+  "手",
+  "絨毯"
+ ],
+ "aliases": {
+  "手": [
+   "両手",
+   "手のひら",
+   "指"
+  ],
+  "絨毯": [
+   "カーペット",
+   "じゅうたん",
+   "敷物",
+   "模様",
+   "緑"
+  ]
+ },
+ "decoys": [
+  "指輪",
+  "時計",
+  "本",
+  "花",
+  "スマートフォン"
+ ],
+ "scene": "絨毯の上で両手のひらを上に向けている",
+ "hard": true,
+ "person": {
+  "count": null,
+  "clothing": null,
+  "colors": [
+   "黒"
+  ],
+  "pose": null,
+  "facing": null,
+  "hair": null,
+  "hands_visible": true,
+  "fingers_visible": null
+ },
+ "count_questions": [
+  {
+   "q": "写っている手は何本ですか？",
+   "a": 2
+  }
+ ],
+ "text_in_image": [],
+ "labeler": "Claude Fable 5.1",
+ "labeled_at": "2026-09-14",
+ "checked_by_human": false
+}

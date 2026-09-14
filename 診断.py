@@ -152,8 +152,9 @@ STEPS = [
     ("cap_core_{L}.json","cap_core.py",      [],              "自制心",           "3〜15分"),
     ("l3_{L}.json",      "cap_l3.py",        [],              "正直さ・読解力",   "5〜60分"),
     ("ja_{L}.json",      "cap_ja.py",        [],              "日本語の質",       "3〜15分"),
-    ("code_{L}.json",    "cap_code.py",      [],              "実作業",           "5〜30分"),
-    ("vision_{L}.json",  "cap_vision.py",    [],              "画像を見るか",     "2〜10分"),
+    # Ver 01.03: 実作業・画像認識は5段の梯子（各10問・8/10 で次の段へ）。段位＝続けて通った最上段
+    ("code_ladder_{L}.json",   "cap_code.py",          ["--level", "all"], "実作業（L1〜L5）",   "15〜40分"),
+    ("vision_ladder_{L}.json", "cap_vision_ladder.py", [],                 "画像認識（V1〜V5）", "3〜10分"),
     ("speed_{L}.json",   "speed.py",         [],              "速度",             "1分"),
 ]
 

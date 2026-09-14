@@ -1,0 +1,103 @@
+{
+ "objects": [
+  {
+   "name": "信号",
+   "count": 1,
+   "color": "青",
+   "position": "左"
+  },
+  {
+   "name": "横断歩道",
+   "count": 1,
+   "color": "白",
+   "position": "中央"
+  },
+  {
+   "name": "柱",
+   "count": null,
+   "color": "白",
+   "position": "中央"
+  },
+  {
+   "name": "人",
+   "count": 1,
+   "color": null,
+   "position": "中央"
+  },
+  {
+   "name": "犬",
+   "count": 1,
+   "color": "黒",
+   "position": "中央"
+  }
+ ],
+ "must_mention": [
+  "信号",
+  "横断歩道",
+  "柱",
+  "人"
+ ],
+ "aliases": {
+  "信号": [
+   "信号機",
+   "青信号",
+   "歩行者信号"
+  ],
+  "横断歩道": [
+   "白線",
+   "ゼブラ",
+   "横断"
+  ],
+  "柱": [
+   "支柱",
+   "ポール",
+   "アーケード",
+   "屋根"
+  ],
+  "人": [
+   "歩行者",
+   "人物",
+   "傘"
+  ]
+ },
+ "decoys": [
+  "車",
+  "自転車",
+  "電車",
+  "猫",
+  "川"
+ ],
+ "scene": "アーケードの歩道",
+ "hard": true,
+ "text_in_image": [
+  "花園町",
+  "AUTO Plus",
+  "HITO Plus"
+ ],
+ "person": {
+  "count": 1,
+  "clothing": null,
+  "colors": [],
+  "pose": "歩く",
+  "facing": "後ろ",
+  "hair": null,
+  "hands_visible": false,
+  "fingers_visible": null
+ },
+ "count_questions": [
+  {
+   "q": "歩行者用の信号は何色ですか？",
+   "a": "青"
+  },
+  {
+   "q": "犬は何匹写っていますか？",
+   "a": 1
+  }
+ ],
+ "labeler": "Claude Fable 5.1",
+ "labeled_at": "2026-09-14",
+ "checked_by_human": false,
+ "fix_log": [
+  "2026-09-14 07:45 8本の実測で訂正"
+ ]
+}

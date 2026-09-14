@@ -1,0 +1,76 @@
+{
+ "objects": [
+  {
+   "name": "女性",
+   "count": 4,
+   "color": "黒",
+   "position": "中央"
+  },
+  {
+   "name": "ベンチ",
+   "count": 1,
+   "color": "黒",
+   "position": "中央"
+  },
+  {
+   "name": "建物",
+   "count": null,
+   "color": "灰",
+   "position": "右"
+  }
+ ],
+ "must_mention": [
+  "女性",
+  "黒",
+  "ベンチ"
+ ],
+ "aliases": {
+  "女性": [
+   "人物",
+   "4人",
+   "四人",
+   "女の人"
+  ],
+  "黒": [
+   "黒い服",
+   "ブラック",
+   "黒ずくめ"
+  ],
+  "ベンチ": [
+   "腰掛",
+   "座って",
+   "椅子"
+  ]
+ },
+ "decoys": [
+  "犬",
+  "傘",
+  "車",
+  "帽子",
+  "花束"
+ ],
+ "scene": "屋外（建物の前）",
+ "person": {
+  "count": 4,
+  "clothing": "私服",
+  "colors": [
+   "黒"
+  ],
+  "pose": "座る",
+  "facing": "正面",
+  "hair": null,
+  "hands_visible": true,
+  "fingers_visible": null
+ },
+ "count_questions": [
+  {
+   "q": "座っている人は何人ですか？",
+   "a": 4
+  }
+ ],
+ "text_in_image": [],
+ "hard": false,
+ "labeler": "Claude Fable 5.1",
+ "labeled_at": "2026-09-14",
+ "checked_by_human": false
+}

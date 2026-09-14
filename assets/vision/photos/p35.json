@@ -1,0 +1,92 @@
+{
+ "objects": [
+  {
+   "name": "人物",
+   "count": 1,
+   "color": null,
+   "position": "中央"
+  },
+  {
+   "name": "聴診器",
+   "count": 1,
+   "color": "灰",
+   "position": "中央"
+  },
+  {
+   "name": "クリップボード",
+   "count": 1,
+   "color": "黒",
+   "position": "中央"
+  },
+  {
+   "name": "ペン",
+   "count": 1,
+   "color": "黒",
+   "position": "中央"
+  },
+  {
+   "name": "眼鏡",
+   "count": 1,
+   "color": "金",
+   "position": "中央"
+  }
+ ],
+ "must_mention": [
+  "人物",
+  "聴診器",
+  "眼鏡"
+ ],
+ "aliases": {
+  "人物": [
+   "女性",
+   "看護師",
+   "医師",
+   "医者",
+   "ナース",
+   "医療従事者"
+  ],
+  "聴診器": [
+   "ステート"
+  ],
+  "眼鏡": [
+   "メガネ",
+   "めがね"
+  ]
+ },
+ "decoys": [
+  "マスク",
+  "注射器",
+  "帽子",
+  "犬",
+  "パソコン"
+ ],
+ "scene": "スタジオ（医療）",
+ "text_in_image": [],
+ "person": {
+  "count": 1,
+  "clothing": "白衣",
+  "colors": [
+   "水色"
+  ],
+  "pose": "立つ",
+  "facing": null,
+  "hair": "お団子・黒",
+  "hands_visible": true,
+  "fingers_visible": null
+ },
+ "count_questions": [
+  {
+   "q": "聴診器は何個ありますか？",
+   "a": 1
+  }
+ ],
+ "hard": false,
+ "labeler": "Claude Fable 5.1",
+ "labeled_at": "2026-09-14",
+ "checked_by_human": false,
+ "fix_log": [
+  "2026-09-14 07:45 8本の実測で訂正",
+  "2026-09-14 08:10 胸のロゴ Health は小さすぎて読めない→文字の問いに使わない"
+ ],
+ "has_unreadable_text": true
+}

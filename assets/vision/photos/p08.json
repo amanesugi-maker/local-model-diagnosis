@@ -1,0 +1,73 @@
+{
+ "objects": [
+  {
+   "name": "ドア",
+   "count": 1,
+   "color": "黒",
+   "position": "右"
+  },
+  {
+   "name": "ベッド",
+   "count": 1,
+   "color": "青",
+   "position": "左"
+  },
+  {
+   "name": "ランプ",
+   "count": 1,
+   "color": "ピンク",
+   "position": "左"
+  },
+  {
+   "name": "カーテン",
+   "count": null,
+   "color": "白",
+   "position": "左"
+  }
+ ],
+ "must_mention": [
+  "ドア",
+  "302",
+  "ベッド"
+ ],
+ "aliases": {
+  "ドア": [
+   "扉",
+   "部屋番号",
+   "ルームナンバー"
+  ],
+  "302": [
+   "３０２"
+  ],
+  "ベッド": [
+   "寝具",
+   "布団",
+   "毛布",
+   "ブランケット"
+  ]
+ },
+ "decoys": [
+  "テレビ",
+  "人",
+  "犬",
+  "机",
+  "絵"
+ ],
+ "scene": "ホテルの客室",
+ "text_in_image": [
+  "302"
+ ],
+ "count_questions": [
+  {
+   "q": "ドアに書かれている数字は何ですか？",
+   "a": "302"
+  }
+ ],
+ "person": {
+  "count": 0
+ },
+ "hard": false,
+ "labeler": "Claude Fable 5.1",
+ "labeled_at": "2026-09-14",
+ "checked_by_human": false
+}

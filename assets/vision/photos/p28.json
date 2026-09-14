@@ -1,0 +1,85 @@
+{
+ "objects": [
+  {
+   "name": "人",
+   "count": 1,
+   "color": null,
+   "position": "中央"
+  },
+  {
+   "name": "ボール",
+   "count": 1,
+   "color": "茶",
+   "position": "中央"
+  },
+  {
+   "name": "ゴール",
+   "count": 1,
+   "color": "赤",
+   "position": "中央"
+  },
+  {
+   "name": "空",
+   "count": null,
+   "color": "白",
+   "position": "中央"
+  }
+ ],
+ "must_mention": [
+  "人",
+  "ボール",
+  "ゴール"
+ ],
+ "aliases": {
+  "人": [
+   "男性",
+   "選手",
+   "プレイヤー",
+   "人物",
+   "ダンク"
+  ],
+  "ボール": [
+   "バスケットボール",
+   "バスケ"
+  ],
+  "ゴール": [
+   "リング",
+   "バックボード",
+   "ネット",
+   "フープ",
+   "バスケットゴール"
+  ]
+ },
+ "decoys": [
+  "観客",
+  "木",
+  "車",
+  "犬",
+  "芝生"
+ ],
+ "scene": "屋外（バスケットコート）",
+ "person": {
+  "count": 1,
+  "clothing": "スポーツウェア",
+  "colors": [
+   "白",
+   "黒"
+  ],
+  "pose": "ジャンプ",
+  "facing": "右",
+  "hair": "ショート・黒",
+  "hands_visible": true,
+  "fingers_visible": null
+ },
+ "count_questions": [
+  {
+   "q": "ボールは何個ありますか？",
+   "a": 1
+  }
+ ],
+ "text_in_image": [],
+ "hard": false,
+ "labeler": "Claude Fable 5.1",
+ "labeled_at": "2026-09-14",
+ "checked_by_human": false
+}

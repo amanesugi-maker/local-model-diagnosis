@@ -1,0 +1,108 @@
+{
+ "objects": [
+  {
+   "name": "自転車",
+   "count": 2,
+   "color": "白",
+   "position": "中央"
+  },
+  {
+   "name": "人",
+   "count": 2,
+   "color": null,
+   "position": "中央"
+  },
+  {
+   "name": "道路",
+   "count": null,
+   "color": "灰",
+   "position": "中央"
+  },
+  {
+   "name": "木",
+   "count": null,
+   "color": "緑",
+   "position": "中央"
+  },
+  {
+   "name": "街灯",
+   "count": 1,
+   "color": "灰",
+   "position": "左"
+  }
+ ],
+ "must_mention": [
+  "自転車",
+  "人",
+  "道路",
+  "木"
+ ],
+ "aliases": {
+  "自転車": [
+   "ロードバイク",
+   "バイク",
+   "サイクリング",
+   "サイクル"
+  ],
+  "人": [
+   "サイクリスト",
+   "ライダー",
+   "人物",
+   "2人",
+   "二人"
+  ],
+  "道路": [
+   "道",
+   "車道",
+   "路面",
+   "舗装"
+  ],
+  "木": [
+   "並木",
+   "樹",
+   "ヤシ",
+   "林",
+   "緑"
+  ]
+ },
+ "decoys": [
+  "車",
+  "犬",
+  "川",
+  "建物",
+  "信号機"
+ ],
+ "scene": "道路（公園）",
+ "person": {
+  "count": 2,
+  "clothing": "スポーツウェア",
+  "colors": [
+   "紫",
+   "白"
+  ],
+  "pose": null,
+  "facing": "後ろ",
+  "hair": null,
+  "hands_visible": true,
+  "fingers_visible": null
+ },
+ "count_questions": [
+  {
+   "q": "自転車は何台ありますか？",
+   "a": 2
+  },
+  {
+   "q": "ヘルメットをかぶっている人は何人ですか？",
+   "a": 2
+  }
+ ],
+ "text_in_image": [],
+ "hard": false,
+ "labeler": "Claude Fable 5.1",
+ "labeled_at": "2026-09-14",
+ "checked_by_human": false,
+ "has_unreadable_text": true,
+ "fix_log": [
+  "2026-09-14 07:45 8本の実測で訂正"
+ ]
+}

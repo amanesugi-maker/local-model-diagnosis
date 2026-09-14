@@ -1,0 +1,59 @@
+{
+ "objects": [
+  {
+   "name": "文字",
+   "count": 6,
+   "color": "茶",
+   "position": "中央"
+  }
+ ],
+ "must_mention": [
+  "PEXELS",
+  "文字"
+ ],
+ "aliases": {
+  "PEXELS": [
+   "Pexels",
+   "pexels"
+  ],
+  "文字": [
+   "アルファベット",
+   "木の文字",
+   "単語"
+  ]
+ },
+ "decoys": [
+  "数字",
+  "人",
+  "本",
+  "鉛筆",
+  "コイン"
+ ],
+ "scene": "灰色の背景に木の文字",
+ "text_in_image": [
+  "PEXELS",
+  "Pexels",
+  "pexels"
+ ],
+ "count_questions": [
+  {
+   "q": "並んでいる文字は何と読めますか？",
+   "a": [
+    "PEXELS",
+    "Pexels",
+    "pexels"
+   ]
+  },
+  {
+   "q": "文字は何文字ありますか？",
+   "a": 6
+  }
+ ],
+ "person": {
+  "count": null
+ },
+ "hard": false,
+ "labeler": "Claude Fable 5.1",
+ "labeled_at": "2026-09-14",
+ "checked_by_human": false
+}

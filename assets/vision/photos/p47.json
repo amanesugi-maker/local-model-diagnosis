@@ -1,0 +1,74 @@
+{
+ "objects": [
+  {
+   "name": "人物",
+   "count": 1,
+   "color": null,
+   "position": "中央"
+  },
+  {
+   "name": "シャツ",
+   "count": 1,
+   "color": "白",
+   "position": "中央"
+  }
+ ],
+ "must_mention": [
+  "人物",
+  "シャツ",
+  "ボブ"
+ ],
+ "aliases": {
+  "人物": [
+   "女性",
+   "女の人",
+   "女の子"
+  ],
+  "シャツ": [
+   "白いシャツ",
+   "ブラウス",
+   "白い服"
+  ],
+  "ボブ": [
+   "短い髪",
+   "ショート",
+   "肩まで",
+   "黒髪",
+   "前髪"
+  ]
+ },
+ "decoys": [
+  "帽子",
+  "眼鏡",
+  "犬",
+  "ネックレス",
+  "鉛筆"
+ ],
+ "scene": "スタジオ",
+ "person": {
+  "count": 1,
+  "clothing": "私服",
+  "colors": [
+   "白"
+  ],
+  "pose": null,
+  "facing": "正面",
+  "hair": "ボブ・黒",
+  "hands_visible": true,
+  "fingers_visible": null
+ },
+ "count_questions": [
+  {
+   "q": "写っている人は何人ですか？",
+   "a": 1
+  }
+ ],
+ "text_in_image": [],
+ "hard": false,
+ "labeler": "Claude Fable 5.1",
+ "labeled_at": "2026-09-14",
+ "checked_by_human": false,
+ "fix_log": [
+  "2026-09-14 08:05 囮「本」は助数詞と衝突するので差し替え"
+ ]
+}

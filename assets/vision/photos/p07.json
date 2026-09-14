@@ -1,0 +1,97 @@
+{
+ "objects": [
+  {
+   "name": "ノートパソコン",
+   "count": 1,
+   "color": "銀",
+   "position": "中央"
+  },
+  {
+   "name": "ランプ",
+   "count": 1,
+   "color": "白",
+   "position": "右"
+  },
+  {
+   "name": "植物",
+   "count": 1,
+   "color": "緑",
+   "position": "中央"
+  },
+  {
+   "name": "テーブル",
+   "count": 1,
+   "color": "茶",
+   "position": "中央"
+  },
+  {
+   "name": "メモ",
+   "count": 1,
+   "color": "白",
+   "position": "左"
+  },
+  {
+   "name": "リモコン",
+   "count": 1,
+   "color": "灰",
+   "position": "中央"
+  }
+ ],
+ "must_mention": [
+  "ノートパソコン",
+  "ランプ",
+  "テーブル",
+  "植物"
+ ],
+ "aliases": {
+  "ノートパソコン": [
+   "パソコン",
+   "ラップトップ",
+   "PC",
+   "ノートPC",
+   "MacBook"
+  ],
+  "ランプ": [
+   "照明",
+   "ライト",
+   "スタンド",
+   "電気",
+   "灯",
+   "フロアランプ"
+  ],
+  "テーブル": [
+   "机",
+   "デスク",
+   "木製"
+  ],
+  "植物": [
+   "観葉植物",
+   "鉢",
+   "草",
+   "グリーン",
+   "鉢植え"
+  ]
+ },
+ "decoys": [
+  "猫",
+  "カップ",
+  "窓",
+  "時計",
+  "椅子"
+ ],
+ "scene": "部屋（夜）",
+ "count_questions": [
+  {
+   "q": "ランプ（照明器具）は何台ありますか？",
+   "a": 1
+  }
+ ],
+ "person": {
+  "count": 0
+ },
+ "text_in_image": [],
+ "hard": false,
+ "labeler": "Claude Fable 5.1",
+ "labeled_at": "2026-09-14",
+ "checked_by_human": false
+}

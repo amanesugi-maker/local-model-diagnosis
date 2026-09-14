@@ -1,0 +1,97 @@
+{
+ "objects": [
+  {
+   "name": "植物",
+   "count": 1,
+   "color": "緑",
+   "position": "中央"
+  },
+  {
+   "name": "ランプ",
+   "count": 1,
+   "color": "茶",
+   "position": "中央"
+  },
+  {
+   "name": "椅子",
+   "count": 1,
+   "color": "茶",
+   "position": "右"
+  },
+  {
+   "name": "テーブル",
+   "count": 1,
+   "color": "茶",
+   "position": "左"
+  },
+  {
+   "name": "本",
+   "count": 2,
+   "color": null,
+   "position": "右"
+  },
+  {
+   "name": "うちわ",
+   "count": 1,
+   "color": "茶",
+   "position": "左"
+  }
+ ],
+ "must_mention": [
+  "植物",
+  "ランプ",
+  "椅子",
+  "本"
+ ],
+ "aliases": {
+  "植物": [
+   "木",
+   "盆栽",
+   "苔玉",
+   "観葉",
+   "グリーン",
+   "枝"
+  ],
+  "ランプ": [
+   "照明",
+   "ライト",
+   "電球",
+   "ペンダント"
+  ],
+  "椅子": [
+   "アームチェア",
+   "チェア",
+   "ソファ"
+  ],
+  "本": [
+   "写真集",
+   "雑誌",
+   "冊子",
+   "ポストカード",
+   "写真",
+   "パンフレット"
+  ]
+ },
+ "decoys": [
+  "テレビ",
+  "猫",
+  "窓",
+  "時計",
+  "パソコン"
+ ],
+ "scene": "部屋（店内）",
+ "hard": true,
+ "count_questions": [
+  {
+   "q": "壁に飾られている本（写真集）は何冊ありますか？",
+   "a": 2
+  }
+ ],
+ "person": {
+  "count": 0
+ },
+ "text_in_image": [],
+ "labeler": "Claude Fable 5.1",
+ "labeled_at": "2026-09-14",
+ "checked_by_human": false
+}

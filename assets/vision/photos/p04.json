@@ -1,0 +1,100 @@
+{
+ "objects": [
+  {
+   "name": "木",
+   "count": null,
+   "color": "赤",
+   "position": "中央"
+  },
+  {
+   "name": "家",
+   "count": 1,
+   "color": "灰",
+   "position": "左"
+  },
+  {
+   "name": "消火栓",
+   "count": 1,
+   "color": "黄",
+   "position": "左"
+  },
+  {
+   "name": "人",
+   "count": 1,
+   "color": null,
+   "position": "中央"
+  },
+  {
+   "name": "落ち葉",
+   "count": null,
+   "color": "赤",
+   "position": "中央"
+  }
+ ],
+ "must_mention": [
+  "木",
+  "家",
+  "消火栓",
+  "人"
+ ],
+ "aliases": {
+  "木": [
+   "紅葉",
+   "樹",
+   "並木",
+   "葉"
+  ],
+  "家": [
+   "住宅",
+   "建物",
+   "屋根"
+  ],
+  "消火栓": [
+   "黄色い",
+   "ハイドラント"
+  ],
+  "人": [
+   "人物",
+   "男性",
+   "歩行者",
+   "通行人",
+   "歩いて"
+  ]
+ },
+ "decoys": [
+  "車",
+  "自転車",
+  "犬",
+  "雪",
+  "川"
+ ],
+ "scene": "住宅街の道路",
+ "hard": true,
+ "person": {
+  "count": 1,
+  "clothing": "私服",
+  "colors": [
+   "紺",
+   "黒"
+  ],
+  "pose": "歩く",
+  "facing": "正面",
+  "hair": null,
+  "hands_visible": false,
+  "fingers_visible": null
+ },
+ "count_questions": [
+  {
+   "q": "黄色い消火栓は何本ありますか？",
+   "a": 1
+  },
+  {
+   "q": "歩いている人は何人写っていますか？",
+   "a": 1
+  }
+ ],
+ "text_in_image": [],
+ "labeler": "Claude Fable 5.1",
+ "labeled_at": "2026-09-14",
+ "checked_by_human": false
+}

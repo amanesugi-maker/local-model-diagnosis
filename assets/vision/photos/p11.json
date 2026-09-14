@@ -1,0 +1,92 @@
+{
+ "objects": [
+  {
+   "name": "道路",
+   "count": null,
+   "color": "黒",
+   "position": "中央"
+  },
+  {
+   "name": "車",
+   "count": 1,
+   "color": "黒",
+   "position": "中央"
+  },
+  {
+   "name": "建物",
+   "count": null,
+   "color": "灰",
+   "position": "左"
+  },
+  {
+   "name": "人",
+   "count": null,
+   "color": null,
+   "position": "中央"
+  },
+  {
+   "name": "矢印",
+   "count": null,
+   "color": "白",
+   "position": "中央"
+  }
+ ],
+ "must_mention": [
+  "道路",
+  "車",
+  "建物",
+  "人"
+ ],
+ "aliases": {
+  "道路": [
+   "車道",
+   "通り",
+   "路面",
+   "道",
+   "街路"
+  ],
+  "車": [
+   "自動車",
+   "乗用車",
+   "クルマ"
+  ],
+  "建物": [
+   "ビル",
+   "店",
+   "商業施設",
+   "デパート"
+  ],
+  "人": [
+   "歩行者",
+   "人物",
+   "通行人",
+   "歩いて"
+  ]
+ },
+ "decoys": [
+  "自転車",
+  "犬",
+  "電車",
+  "川",
+  "雪"
+ ],
+ "scene": "商店街の道路（俯瞰）",
+ "hard": true,
+ "text_in_image": [
+  "三越駐車場",
+  "OUT",
+  "IN"
+ ],
+ "count_questions": [
+  {
+   "q": "道路を走っている車は何台ですか？",
+   "a": 1
+  }
+ ],
+ "person": {
+  "count": 0
+ },
+ "labeler": "Claude Fable 5.1",
+ "labeled_at": "2026-09-14",
+ "checked_by_human": false
+}

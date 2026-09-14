@@ -1,0 +1,56 @@
+{
+ "objects": [
+  {
+   "name": "りんご",
+   "count": 3,
+   "color": "赤",
+   "position": "中央"
+  },
+  {
+   "name": "テーブル",
+   "count": 1,
+   "color": "茶",
+   "position": "中央"
+  }
+ ],
+ "must_mention": [
+  "りんご",
+  "テーブル"
+ ],
+ "aliases": {
+  "りんご": [
+   "リンゴ",
+   "林檎",
+   "apple"
+  ],
+  "テーブル": [
+   "机",
+   "台",
+   "木目",
+   "板",
+   "木製"
+  ]
+ },
+ "decoys": [
+  "バナナ",
+  "皿",
+  "ナイフ",
+  "犬",
+  "グラス"
+ ],
+ "scene": "机の上",
+ "count_questions": [
+  {
+   "q": "りんごは何個ありますか？",
+   "a": 3
+  }
+ ],
+ "person": {
+  "count": 0
+ },
+ "text_in_image": [],
+ "hard": false,
+ "labeler": "Claude Fable 5.1",
+ "labeled_at": "2026-09-14",
+ "checked_by_human": false
+}

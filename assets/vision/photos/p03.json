@@ -1,0 +1,59 @@
+{
+ "objects": [
+  {
+   "name": "うさぎ",
+   "count": 2,
+   "color": "白",
+   "position": "中央"
+  },
+  {
+   "name": "草",
+   "count": null,
+   "color": "緑",
+   "position": "中央"
+  }
+ ],
+ "must_mention": [
+  "うさぎ",
+  "草"
+ ],
+ "aliases": {
+  "うさぎ": [
+   "ウサギ",
+   "兎",
+   "rabbit"
+  ],
+  "草": [
+   "芝生",
+   "芝",
+   "草地",
+   "grass",
+   "草原"
+  ]
+ },
+ "decoys": [
+  "猫",
+  "鳥",
+  "人参",
+  "犬",
+  "木"
+ ],
+ "scene": "芝生",
+ "count_questions": [
+  {
+   "q": "うさぎは何匹いますか？",
+   "a": 2
+  }
+ ],
+ "person": {
+  "count": 0
+ },
+ "text_in_image": [],
+ "hard": false,
+ "labeler": "Claude Fable 5.1",
+ "labeled_at": "2026-09-14",
+ "checked_by_human": false,
+ "fix_log": [
+  "2026-09-14 07:45 8本の実測で訂正"
+ ]
+}

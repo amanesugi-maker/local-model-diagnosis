@@ -1,0 +1,87 @@
+{
+ "objects": [
+  {
+   "name": "ノートパソコン",
+   "count": 1,
+   "color": "銀",
+   "position": "左"
+  },
+  {
+   "name": "カップ",
+   "count": 1,
+   "color": "白",
+   "position": "中央"
+  },
+  {
+   "name": "ソーサー",
+   "count": 1,
+   "color": "白",
+   "position": "中央"
+  },
+  {
+   "name": "スプーン",
+   "count": 1,
+   "color": "銀",
+   "position": "右"
+  },
+  {
+   "name": "テーブル",
+   "count": 1,
+   "color": "茶",
+   "position": "中央"
+  }
+ ],
+ "must_mention": [
+  "ノートパソコン",
+  "カップ",
+  "テーブル"
+ ],
+ "aliases": {
+  "ノートパソコン": [
+   "パソコン",
+   "ラップトップ",
+   "MacBook",
+   "Mac",
+   "PC",
+   "ノートPC",
+   "laptop"
+  ],
+  "カップ": [
+   "コップ",
+   "マグ",
+   "コーヒー",
+   "ティーカップ",
+   "cup"
+  ],
+  "テーブル": [
+   "机",
+   "デスク",
+   "木製"
+  ]
+ },
+ "decoys": [
+  "スマートフォン",
+  "鉛筆",
+  "植物",
+  "眼鏡",
+  "ペン"
+ ],
+ "scene": "机の上",
+ "count_questions": [
+  {
+   "q": "カップは何個ありますか？",
+   "a": 1
+  }
+ ],
+ "person": {
+  "count": 0
+ },
+ "text_in_image": [],
+ "hard": false,
+ "labeler": "Claude Fable 5.1",
+ "labeled_at": "2026-09-14",
+ "checked_by_human": false,
+ "fix_log": [
+  "2026-09-14 08:05 囮「本」は助数詞と衝突するので差し替え"
+ ]
+}

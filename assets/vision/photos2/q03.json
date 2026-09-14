@@ -1,0 +1,57 @@
+{
+ "objects": [
+  {
+   "name": "文字",
+   "count": null,
+   "color": null,
+   "position": "中央"
+  }
+ ],
+ "must_mention": [
+  "文字"
+ ],
+ "aliases": {
+  "skool": [
+   "SKOOL"
+  ],
+  "文字": [
+   "アルファベット",
+   "単語",
+   "ロゴ",
+   "フェルト",
+   "skool",
+   "SKOOL"
+  ]
+ },
+ "decoys": [
+  "数字",
+  "人",
+  "本",
+  "鉛筆",
+  "スマートフォン"
+ ],
+ "scene": "黒い背景に色つきの文字",
+ "text_in_image": [
+  "skool",
+  "SKOOL"
+ ],
+ "count_questions": [
+  {
+   "q": "書かれている単語は何ですか？",
+   "a": [
+    "skool",
+    "SKOOL"
+   ]
+  }
+ ],
+ "person": {
+  "count": null
+ },
+ "hard": false,
+ "labeler": "Claude Fable 5.1",
+ "labeled_at": "2026-09-14",
+ "checked_by_human": false,
+ "fix_log": [
+  "2026-09-14 11:40 必須語 skool と「文字=5」を外す（1字ずつ列挙する答えは正しく読めている・7/8 がここで落ちた）"
+ ]
+}

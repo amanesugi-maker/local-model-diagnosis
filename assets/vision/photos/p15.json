@@ -1,0 +1,56 @@
+{
+ "objects": [
+  {
+   "name": "みかん",
+   "count": 7,
+   "color": "橙",
+   "position": "中央"
+  },
+  {
+   "name": "皿",
+   "count": 1,
+   "color": "白",
+   "position": "中央"
+  }
+ ],
+ "must_mention": [
+  "みかん",
+  "皿"
+ ],
+ "aliases": {
+  "みかん": [
+   "オレンジ",
+   "柑橘",
+   "ミカン",
+   "蜜柑",
+   "輪切り"
+  ],
+  "皿": [
+   "プレート",
+   "器",
+   "白い皿"
+  ]
+ },
+ "decoys": [
+  "りんご",
+  "フォーク",
+  "ナイフ",
+  "コップ",
+  "テーブルクロス"
+ ],
+ "scene": "皿の上",
+ "hard": true,
+ "count_questions": [
+  {
+   "q": "みかんの輪切りは何枚ありますか？",
+   "a": 7
+  }
+ ],
+ "person": {
+  "count": 0
+ },
+ "text_in_image": [],
+ "labeler": "Claude Fable 5.1",
+ "labeled_at": "2026-09-14",
+ "checked_by_human": false
+}

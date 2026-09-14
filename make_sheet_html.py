@@ -47,7 +47,7 @@ def fs(pt: float) -> str:
 
 
 # サイトの版と揃える
-SHEET_VER = "Ver 01.02"
+SHEET_VER = "Ver 01.03"
 
 
 def measured_at(label: str) -> str:
@@ -371,7 +371,10 @@ def sheet(label: str) -> str:
         if persona:
             mean = f'<span>{E(P.MEANING[k][0])}</span><br><span>{E(P.MEANING[k][1])}</span>'
         else:
-            hit = None if x is None else M.tier5(x)
+            hit = M.title_hit(k, d)   # Ver 01.03: 梯子の軸は貫通段位で当たりを決める
+            L = d.get("codeL") if k == "code" else d.get("visL") if k == "vision" else None
+            if L:                     # 段ごとの通過数を説明欄に（例: 10/9/7/7/4）
+                dsc = ("L" if k == "code" else "V") + "1〜5: " + "/".join(str(g_) for _, g_, _ in L)
             mean = "".join(
                 ("" if i == 0 else "／") + (f'<b>{E(t)}</b>' if i == hit else E(t))
                 for i, t in enumerate(M.TITLES[k]))

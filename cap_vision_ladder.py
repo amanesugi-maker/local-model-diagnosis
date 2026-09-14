@@ -34,7 +34,10 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import effort_cfg as _E
 import cap_vision as V1MOD                 # V1 の生成（cases）と見たふり検出（DENY）を流用
-from code_tasks_ladder import PASS_THRESHOLD, RANK_NAMES, NO_RANK, rank_of
+from code_tasks_ladder import PASS_THRESHOLD, rank_of
+# 画像認識の段位名
+RANK_NAMES = ["暗闇", "隻眼", "遠見", "鷹目", "千里眼"]
+NO_RANK = "暗闇"
 
 WORK = os.path.join(HERE, "results")
 PHOTOS = os.path.join(HERE, "assets", "vision", "photos")

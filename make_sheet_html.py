@@ -47,7 +47,7 @@ def fs(pt: float) -> str:
 
 
 # サイトの版と揃える
-SHEET_VER = "Ver 01.03"
+SHEET_VER = "Ver 01.04"   # 2026-09-15 分野方式（達成した分野の数で階位を決める）
 
 
 def measured_at(label: str) -> str:
@@ -240,7 +240,7 @@ def sheet(label: str) -> str:
     v = d["v"]
     ls = M.letters(v)
     sc = M.score(v)
-    code = M.code(v)
+    code = M.code(v, d)
     nm, desc = M.TYPENAME.get(M.type_key(v), ("（名前未作成）", ""))
     name, full, eng = M.names(label)
     sp = d.get("speed")
@@ -362,18 +362,37 @@ def sheet(label: str) -> str:
           "<thead><tr>" + "".join(
               f'<th style="height:{px(0.18)}">{h}</th>'
               for h in ("文字", "軸", "意味・称号", "実測", "評価")) + "</tr></thead><tbody>"]
+    DOM = d.get("dom", {})
     for k in keys:
         x = v.get(k)
         n, dsc = AXD[k]
         persona = k in P.PERSONA
+        dm = DOM.get(k)
+        if dm:
+            # 2026-09-15 分野方式: 説明欄は「分野 3/5」＋各分野の通過数
+            vs = list(dm.get("分野", {}).values())
+            hd = f'分野 {dm.get("達成数", 0)}/{dm.get("分野数", 0)}'
+            if len(vs) > 6:                       # 無検閲度の12分類は内訳を出すと溢れる
+                dsc = hd
+            elif len({o_["問題数"] for o_ in vs}) == 1:   # 問題数がそろっている軸は通過数だけ
+                dsc = hd + ": " + "・".join(str(o_["通過"]) for o_ in vs)
+            else:
+                dsc = hd + ": " + "・".join(f'{o_["通過"]}/{o_["問題数"]}' for o_ in vs)
+            # 2026-09-16: 長いと軸の欄で折り返し、行が伸びて最下行が凡例と重なっていた。
+            # 折り返す長さを超えたら内訳を落として「分野 n/N」だけにする
+            if len(dsc) > 16:
+                dsc = hd
         mark = ("？" if x is None else M.KANJI[k][0 if x >= TH[k] else 1]) if persona else \
                ("？" if x is None else str(min(9, int(x // 10))))   #
+        if persona and dm:
+            mark = dm.get("文字") or mark
         if persona:
             mean = f'<span>{E(P.MEANING[k][0])}</span><br><span>{E(P.MEANING[k][1])}</span>'
         else:
-            hit = M.title_hit(k, d)   # Ver 01.03: 梯子の軸は貫通段位で当たりを決める
-            L = d.get("codeL") if k == "code" else d.get("visL") if k == "vision" else None
-            if L:                     # 段ごとの通過数を説明欄に（例: 10/9/7/7/4）
+            hit = M.title_hit(k, d)   # Ver 01.04: 分野方式は達成数がそのまま階位
+            L = None if dm else (d.get("codeL") if k == "code"
+                                 else d.get("visL") if k == "vision" else None)
+            if L:                     # 旧・梯子方式の結果。段ごとの通過数を説明欄に（例: 10/9/7/7/4）
                 dsc = ("L" if k == "code" else "V") + "1〜5: " + "/".join(str(g_) for _, g_, _ in L)
             mean = "".join(
                 ("" if i == 0 else "／") + (f'<b>{E(t)}</b>' if i == hit else E(t))

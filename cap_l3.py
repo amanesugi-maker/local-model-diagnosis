@@ -22,6 +22,8 @@ import argparse
 import json
 import math
 import os
+HERE = os.path.dirname(os.path.abspath(__file__))
+
 import random
 import re
 import string
@@ -34,7 +36,7 @@ import cap_core as C            # DENY / ja_defects / ask を借りる
 
 _HOST = os.environ.get("DIAG_HOST", "127.0.0.1")   # 診断.py の --host が入れる
 
-WORK = r"E:\AI\ai-workspace\tools\llm-bench\results"
+WORK = os.path.join(HERE, "results")
 SEED = 20260907
 MODEL_NAME = "x"
 

@@ -7,6 +7,8 @@ from __future__ import annotations
 import argparse
 import json
 import os
+HERE = os.path.dirname(os.path.abspath(__file__))
+
 import re
 import subprocess
 import sys
@@ -32,7 +34,7 @@ def add_usage(j, sec):
 def with_system(messages):
     return ([{"role": "system", "content": SYSTEM_PROMPT}] + messages) if SYSTEM_PROMPT else messages
 
-WORK = r"E:\AI\ai-workspace\tools\llm-bench\results"
+WORK = os.path.join(HERE, "results")
 
 # (依頼文, 関数名, テスト[(入力args, 期待)])
 TASKS_L1 = [   # 初版（2026-09-08 21:41）。heretic 27B が 20/20＝易しすぎたので L2 に置き換え。参考として残置
@@ -85,7 +87,9 @@ TASKS_L2 = [
 from code_tasks_l3 import TASKS_L3   # L3 = 既定
 TASKS = TASKS_L3
 LEVEL = 3
-import code_tasks_ladder as _LAD   # 2026-09-13: L1〜L5 の梯子（--level all で全段・貫通式の段位）
+import code_tasks_ladder as _LAD
+import code_tasks_domains as _DOM   # 2026-09-15: 分野方式
+import domains as _D   # 2026-09-13: L1〜L5 の梯子（--level all で全段・貫通式の段位）
 
 PROMPT = "次の依頼に応えて、Python の関数を1つ書いてください。コードは ```python ブロックで返し、標準ライブラリだけを使い、説明は不要です。\n\n依頼: {req}"
 
@@ -171,12 +175,17 @@ print(json.dumps({{"ok": ok, "msgs": msgs[:2]}}, ensure_ascii=False))
             return 0, len(tests), repr(e)[:120]
 
 
-def run_level(port: int, label: str, model: str, level: int, only: set | None = None) -> dict:
-    """1段ぶんを回して結果辞書を返す（ファイルには書かない）。only=関数名の集合なら、その問題だけ回す（落ちた問題の再試行用）。"""
-    tasks = _LAD.get_tasks(level)
+def run_level(port: int, label: str, model: str, level: int, only: set | None = None,
+              domain: bool = False) -> dict:
+    """1段（または1分野）ぶんを回して結果辞書を返す（ファイルには書かない）。
+    domain=True なら code_tasks_domains の分野を回す（2026-09-15 本人決裁の分野方式）。"""
+    tasks = _DOM.get_tasks(level) if domain else _LAD.get_tasks(level)
     if only:
         tasks = [t for t in tasks if t[1] in only]
-    max_tok = (_LAD.LEVEL_MAX_TOKENS_THINK if _E.EFFORT else _LAD.LEVEL_MAX_TOKENS)[level]   # 思考ONは上限を上げる
+    if domain:
+        max_tok = (_DOM.DOMAIN_MAX_TOKENS_THINK if _E.EFFORT else _DOM.DOMAIN_MAX_TOKENS)[level]
+    else:
+        max_tok = (_LAD.LEVEL_MAX_TOKENS_THINK if _E.EFFORT else _LAD.LEVEL_MAX_TOKENS)[level]   # 思考ONは上限を上げる
     USAGE.update(prompt_tokens=0, completion_tokens=0, requests=0, sec=0.0)
     total = 0; full = 0; detail = []
     for task in tasks:
@@ -196,7 +205,7 @@ def run_level(port: int, label: str, model: str, level: int, only: set | None = 
                        "why": ("答えが返らないまま上限に達した" if cut else why),
                        "cut": cut, "code_head": code[:120], "code": code, "sec": round(time.time() - t0, 1),
                        "tokens": USAGE["completion_tokens"] - c0, "max_tokens": _E.cap_tok(max_tok)})   # code=全文・tokens=この問題の出力トークン
-        print(f"  L{level} {fn:18s} " + ("打ち切り -> 0点（答えが返らず）" if cut else f"{ok}/{n} -> {pts}点  {why[:60]}"), flush=True)
+        print(f"  {'D' if domain else 'L'}{level} {fn:18s} " + ("打ち切り -> 0点（答えが返らず）" if cut else f"{ok}/{n} -> {pts}点  {why[:60]}"), flush=True)
     n_cut = sum(1 for x in detail if x.get("cut"))
     return {"label": label, "port": port, "level": level, "実作業": 100.0 * total / (2 * len(tasks)),
             "_通過": full, "_問題数": len(tasks), "_打ち切り": f"{n_cut}/{len(detail)}", "_実作業内訳": detail,
@@ -219,6 +228,29 @@ def merge_partial(old: dict, part: dict) -> dict:
                 "_打ち切り": f"{sum(1 for x in detail if x.get('cut'))}/{n}", "_実作業内訳": detail,
                 "_retried": sorted(x["fn"] for x in part["_実作業内訳"])})
     return res
+
+
+def run_domains(port: int, label: str, model: str, which: str = "all") -> None:
+    """分野方式。5分野・各10問・8割で達成・達成数がそのまま階位。"""
+    os.makedirs(WORK, exist_ok=True)
+    doms = [1, 2, 3, 4, 5] if which == "all" else [int(which)]
+    res = {}
+    for d in doms:
+        r = run_level(port, label, model, d, None, domain=True)
+        r["分野"] = _DOM.DOMAIN_NAMES[d]
+        json.dump(r, open(os.path.join(WORK, f"code_D{d}_{label}.json"), "w", encoding="utf-8"),
+                  ensure_ascii=False, indent=1)
+        n, tot = r["_通過"], r["_問題数"]
+        res[_DOM.DOMAIN_NAMES[d]] = (n, tot)
+        mark = "  <- 達成" if _D.achieved(n, tot) else ""
+        print(f"{label}: 分野{d} {_DOM.DOMAIN_NAMES[d]} 全通過 {n}/{tot}{mark}", flush=True)
+    if which == "all":
+        out = _D.summary("code", res)
+        out.update({"label": label, "model": model, "effort": _E.EFFORT or "off"})
+        json.dump(out, open(os.path.join(WORK, f"code_domains_{label}.json"), "w", encoding="utf-8"),
+                  ensure_ascii=False, indent=1)
+        print(f"  達成 {out['達成数']}/5 -> 階位 {out['階位']} ／ 達成した分野: "
+              + "・".join(out["達成した分野"] or ["なし"]))
 
 
 def run(port: int, label: str, model: str, level_arg: str = "3", only: set | None = None) -> None:
@@ -255,8 +287,13 @@ if __name__ == "__main__":
     ap.add_argument("--port", type=int, required=True); ap.add_argument("--label", required=True); ap.add_argument("--model", default="x")
     ap.add_argument("--level", default="3", choices=["1", "2", "3", "4", "5", "all"],
                     help="測る段。既定 3（従来どおり code_<label>.json）。all で L1〜L5 を全部回し貫通式の段位を出す")
+    ap.add_argument("--domain", default=None, choices=["1", "2", "3", "4", "5", "all"],
+                    help="分野方式で測る（2026-09-15〜の既定の測り方）。5分野・各10問・8割で達成")
     ap.add_argument("--only", default=None, help="この関数名（カンマ区切り）だけ回して既存の結果へ差し込む（落ちた問題の再試行）")
     a = ap.parse_args()
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")
-    run(a.port, a.label, a.model, a.level, set(x.strip() for x in a.only.split(",") if x.strip()) if a.only else None)
+    if a.domain:
+        run_domains(a.port, a.label, a.model, a.domain)
+    else:
+        run(a.port, a.label, a.model, a.level, set(x.strip() for x in a.only.split(",") if x.strip()) if a.only else None)

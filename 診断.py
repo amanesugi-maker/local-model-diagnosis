@@ -255,7 +255,7 @@ def sheet(label: str, out_dir: str) -> str:
     sc = M.score(d["v"])
     k = rank_art.art_key(d["v"], sc.get("rank"))
     name, full, eng = M.names(label)
-    j = {"format": "lmd-sheet/1", "label": label, "name": full, "code": M.code(d["v"]),
+    j = {"format": "lmd-sheet/1", "label": label, "name": full, "code": M.code(d["v"], d),
          "epithet": M.epithet(d), "desc": M.TYPENAME.get(M.type_key(d["v"]), ("", ""))[1],
          "score": sc.get("scaled"), "rank": sc.get("rank"),
          "art": {"rank": k[0], "job": k[1]} if k else None, "html": S.sheet(label)}
@@ -310,7 +310,7 @@ def main() -> None:
     p = sheet(label, a.out)
     say()
     say("── 診断おわり " + f"（{(time.time() - t0) / 60:.0f} 分）")
-    say(f"十文字 : {M.code(d['v'])}")
+    say(f"十文字 : {M.code(d['v'], d)}")
     say(f"二つ名 : {M.epithet(d)}")
     if sc["scaled"] is not None:
         say(f"総合   : {sc['scaled']:.1f} 点（{sc['rank']}）")

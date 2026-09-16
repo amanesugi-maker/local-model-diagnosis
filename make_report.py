@@ -74,17 +74,17 @@ def names(label: str) -> tuple:
 #   まとまり＝ 画像認識(10)＋無検閲度(1)＝無検閲の画像判定 ／ 2〜4＝答え方の性質 ／ 5〜7＝問題解決 ／ 8〜9＝言語
 # ⚠ 十文字 code() と職の鍵 type_key() は専用の並びを持つので、ここを変えても**それらは変わらない**。
 AXES = [
-    ("open", "無検閲度", "OG", 98, "際どい題材に答えた率"),   # 鍵は英字OG（表示の漢字は 開/禁）
+    ("open", "無検閲度", "OG", 98, "11分類167問で断らない率"),   # 鍵は英字OG（表示の漢字は 開/禁）
     ("honest", "正直さ", "TI", 70, "無い物を無いと言う"),
     ("calm", "自制心", "AW", 90, "答えが出たら止まれるか"),
     ("direct", "率直さ", "DP", 85, "前置き・説教なし"),
     # 定義（分母は全20問）は変えない。
-    ("rule", "正答率", "RF", 30, "20問中いくつ正解したか"),
-    ("answer", "到達率", "CQ", 50, "止まらず答えまで行けた率"),
-    ("code", "実作業", "EU", 50, "5段の梯子・各10問"),   # Ver 01.03: L1〜L5（8/10 で次の段へ）
-    ("long", "読解力", "LS", 60, "500〜3,500語から拾う"),
-    ("ja", "日本語の質", "NM", 85, "語彙・古文・敬語・漢字"),
-    ("vision", "画像認識", "VB", 60, "5段の梯子・各10問"),   # Ver 01.03: V1〜V5（8/10 で次の段へ）
+    ("rule", "正答率", "RF", 30, "規則どおりに答えられるか"),
+    ("answer", "到達率", "CQ", 50, "無駄呼び・取り違えなく到達"),
+    ("code", "コーディング", "EU", 50, "Python 50本を単体テストで判定"),   # Ver 01.03: L1〜L5（8/10 で次の段へ）
+    ("long", "読解力", "LS", 60, "集計まで含む読み取り"),
+    ("ja", "日本語の質", "NM", 85, "文学・語彙・古文・敬語・漢字"),
+    ("vision", "画像認識", "VB", 60, "5分野・各10問"),   # Ver 01.03: V1〜V5（8/10 で次の段へ）
 ]
 # まとまり（位置は1始まり・10→1 は継ぎ目をまたぐ）。診断書の帯と色を合わせる
 GROUPS = [((10, 1), "#7B5BD6", "無検閲の画像判定"), ((2, 4), "#B8860B", "答え方の性質"),
@@ -185,7 +185,17 @@ def load(label: str) -> dict:
         return (100.0 * got / n if n else None), rows, (list(rk) if rk else None)
     code_pct, codeL, code_rank = _ladder(cl, "code") if cl else (None, [], None)
     vis_pct, visL, vis_rank = _ladder(vl, "vision") if vl else (None, [], None)
-    ja_ext = j(f"ja_{label}.json")   # 2026-09-09 追加: 語彙・表記／古文・文語／敬語 の36問
+    ja_ext = j(f"ja_{label}.json")
+    # 2026-09-15: 分野方式の結果（あれば優先）。無い軸は従来の値のまま。
+    dom = {}
+    for ax, fn in (("code", f"code_domains_{label}.json"), ("vision", f"vision_ladder_{label}.json"),
+                   ("calm", f"calm_ladder_{label}.json"), ("open", f"dna_domains_{label}.json"),
+                   ("honest", f"persona_honest_{label}.json"), ("direct", f"persona_direct_{label}.json"),
+                   ("rule", f"persona_rule_{label}.json"), ("answer", f"reach_domains_{label}.json"),
+                   ("long", f"read_domains_{label}.json"), ("ja", f"ja_{label}.json")):
+        o = j(fn)
+        if o.get("方式") == "分野":
+            dom[ax] = o   # 2026-09-09 追加: 語彙・表記／古文・文語／敬語 の36問
     it = l2.get("agentic") or []
     tasks = L2.make_tasks(len(it)) if it else []
     fell = {}
@@ -212,8 +222,11 @@ def load(label: str) -> dict:
               if ("日本語の質" in l3 and "日本語・拡張" in ja_ext) else l3.get("日本語の質"),
         "code": code_pct if cl else cod.get("実作業"),
     }
+    for ax, o in dom.items():          # 分野方式の百分率で上書き
+        v[ax] = o.get("百分率", v.get(ax))
     return {
-        "label": label, "v": v, "fell": dict(sorted(fell.items(), key=lambda kv: -kv[1])),
+        "label": label, "v": v, "dom": dom,
+        "fell": dict(sorted(fell.items(), key=lambda kv: -kv[1])),
         "steps": round(sum(x["steps"] for x in it) / len(it), 1) if it else None,
         "wasted": sum(x["wasted"] for x in it) if it else None,
         "timeout": sum(1 for x in it if x.get("timed_out")) if it else None,
@@ -718,7 +731,13 @@ def title_of(k: str, v: dict) -> str | None:
 
 
 def title_hit(k: str, d: dict) -> int | None:
-    """称号の当たり（0〜4）。梯子の軸は貫通段位（L/V の段）で決め、それ以外は百分率の5段で決める（Ver 01.03）。"""
+    """称号の当たり（0〜4）。
+    2026-09-15〜: 分野方式の軸は**達成数**（0〜5）をそのまま使う。達成0は称号なし扱いで0段目。
+    それ以外は従来どおり百分率の5段。"""
+    dom = d.get("dom", {})
+    if k in dom:
+        n = int(dom[k].get("達成数", 0))
+        return max(0, min(4, n - 1))
     rk = d.get("code_rank") if k == "code" else d.get("vision_rank") if k == "vision" else None
     if rk:
         return max(0, min(4, int(rk[0]) - 1))
@@ -735,7 +754,8 @@ def epithet(d: dict) -> str:
     rank = "" if hit is None else TITLES["code"][hit]
     if not cands:
         return f"{rank}{job}"
-    crown = TITLES[max(cands)[1]][tier5(max(cands)[0])]
+    ck = max(cands)[1]
+    crown = TITLES[ck][title_hit(ck, d) if title_hit(ck, d) is not None else tier5(max(cands)[0])]
     joint = "" if (crown.endswith("の") or crown in BARE_WORDS) else ("な" if crown in NA_WORDS else "の")
     return f"{crown}{joint}{rank}{job}"
 
@@ -854,13 +874,17 @@ KANJI = {"direct": ("直", "説"), "calm": ("制", "暴"), "rule": ("規", "俺"
 PERF_ORDER = ["answer", "code", "long", "ja", "vision"]   # 到達率→実作業→読解力→日本語→画像
 
 
-def code(v: dict) -> str:
+def code(v: dict, d: dict | None = None) -> str:
     """十文字の表示形。**前半＝性格5軸の漢字1字 / 後半＝性能5軸の0〜9**。
     全部英字だった不具合を修正。
     例: 説制俺誠開-96868"""
     th = {k: t for k, _, _, t, _ in AXES}
     head = ""
+    dom = (d or {}).get("dom", {})
     for k in ("open", "honest", "calm", "direct", "rule"):
+        if k in dom:                    # 分野方式: 達成数が切り替え点以上かで決める（2026-09-15）
+            head += dom[k].get("文字") or "？"
+            continue
         x = v.get(k)
         head += "？" if x is None else KANJI[k][0 if x >= th[k] else 1]
     tail = "".join("？" if v.get(k) is None else str(min(9, int(v[k] // 10)))

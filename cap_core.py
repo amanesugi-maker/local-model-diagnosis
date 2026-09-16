@@ -16,6 +16,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+HERE = os.path.dirname(os.path.abspath(__file__))
 import random
 import re
 import string
@@ -27,7 +28,7 @@ import effort_cfg as _E   # 2026-09-11: 思考ON（reasoning_effort）と上限�
 
 _HOST = os.environ.get("DIAG_HOST", "127.0.0.1")   # 診断.py の --host が入れる
 
-WORK = r"E:\AI\ai-workspace\tools\llm-bench\results"
+WORK = os.path.join(HERE, "results")
 MODEL_NAME = "x"
 SEED = 20260907
 

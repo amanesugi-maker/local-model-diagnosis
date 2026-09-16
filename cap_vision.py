@@ -10,6 +10,7 @@ import base64
 import io
 import json
 import os
+HERE = os.path.dirname(os.path.abspath(__file__))
 import random
 import re
 import string
@@ -38,7 +39,7 @@ from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 _HOST = os.environ.get("DIAG_HOST", "127.0.0.1")   # 診断.py の --host が入れる
 
-WORK = r"E:\AI\ai-workspace\tools\llm-bench\results"
+WORK = os.path.join(HERE, "results")
 SEED = 20260908
 # 等幅フォント。Windows以外でも動くよう、見つかった最初のものを使う（2026-09-09 配布対応）。
 # 字形が違っても測っているのは「画像の中の文字を読めるか」なので判定には影響しない。

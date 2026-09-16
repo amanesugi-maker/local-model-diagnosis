@@ -11,15 +11,16 @@ from __future__ import annotations
 
 import glob
 import os
+HERE = os.path.dirname(os.path.abspath(__file__))
+
 import random
 import string
 
+# 2026-09-16: このPCの FreeToken 環境を指していて、他人の環境では5つとも空振りし、
+# realistic() が RuntimeError を投げて速度測定が落ちていた。
+# 配布物の中にある .py を素材にする（「コードの長文」という性質は保たれる）。
 SOURCES = [
-    r"E:\AI\ai-workspace\tools\llm-bench\results\*.py",
-    r"D:\AI\LLM\freetoken-qwen4exp-env\Lib\site-packages\freetoken\server\*.py",
-    r"D:\AI\LLM\freetoken-qwen4exp-env\Lib\site-packages\freetoken\models\qwen4_exp\*.py",
-    r"D:\AI\LLM\freetoken-qwen4exp-env\Lib\site-packages\freetoken\moe\*.py",
-    r"D:\AI\LLM\freetoken-qwen4exp-env\Lib\site-packages\freetoken\scheduler\*.py",
+    os.path.join(HERE, "*.py"),
 ]
 
 
@@ -46,7 +47,8 @@ def realistic(target_chars: int) -> str:
     if _CACHE is None:
         _CACHE = _corpus()
     if not _CACHE:
-        raise RuntimeError("素材が集まらなかった")
+        # 2026-09-16: 配布物では「止まる」より「合成テキストで続ける」ほうが正しい
+        return ("def f(x):\n    return x\n" * (need // 24 + 1))[:need]
     out = _CACHE
     while len(out) < target_chars:
         out += _CACHE

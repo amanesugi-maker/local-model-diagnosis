@@ -23,6 +23,8 @@ import argparse
 import ast
 import json
 import os
+HERE = os.path.dirname(os.path.abspath(__file__))
+
 import random
 import re
 import time
@@ -31,7 +33,7 @@ import requests
 
 import effort_cfg as _E   # 2026-09-13: 思考ON対応（既定はOFFのまま）
 
-WORK = r"E:\AI\ai-workspace\tools\llm-bench\results"
+WORK = os.path.join(HERE, "results")
 MODEL_NAME = "x"
 
 TOOLS = [

@@ -35,6 +35,7 @@ sys.path.insert(0, HERE)
 import effort_cfg as _E
 import cap_vision as V1MOD                 # V1 の生成（cases）と見たふり検出（DENY）を流用
 from code_tasks_ladder import PASS_THRESHOLD, rank_of
+import domains as _D   # 2026-09-15: 分野方式
 # 画像認識の段位名
 RANK_NAMES = ["暗闇", "隻眼", "遠見", "鷹目", "千里眼"]
 NO_RANK = "暗闇"
@@ -166,6 +167,13 @@ def gen_labels() -> dict:
         out[gid] = {"objects": [{"name": "人物", "count": 1}], "must_mention": ["人物"], "aliases": {"人物": ["女性", "女の人"]}, "decoys": [],
                     "scene": "スタジオ（合成）", "text_in_image": [], "hard": False, "person": person, "count_questions": [], "synthetic": True, "gen_kind": k, "gen_meta": meta}
     return out
+
+
+def domain_rank(fp: dict) -> tuple:
+    """分野方式。順序を見ず、8割取れた分野の数で階位を決める。
+    fp = {段番号: (通過数, 問題数)}。返り値 (達成数, 階位名)。"""
+    res = {LEVEL_NAMES[lv]: v for lv, v in fp.items()}
+    return _D.rank("vision", res)
 
 
 def ratio_rank(fp: dict) -> tuple:
@@ -735,9 +743,12 @@ def run(port: int, label: str, model: str, level_arg: str, only: str = "", sync:
     if level_arg == "all":
         fp = {lv: (r_["_通過"], r_["_問題数"]) for lv, r_ in summary.items()}
         lv_, name = ratio_rank(fp)
+        res = {LEVEL_NAMES[lv]: (r_["_通過"], r_["_問題数"]) for lv, r_ in summary.items()}
+        dom = _D.summary("vision", res)
         lad = {"label": label, "model": model, "effort": _E.EFFORT or "off",
                "levels": {str(lv): {"name": LEVEL_NAMES[lv], "通過": r_["_通過"], "問題数": r_["_問題数"]} for lv, r_ in summary.items()},
                "貫通段位": [lv_, name], "基準": "80%（10問なら8）"}
+        lad.update(dom)          # 分野方式の達成数・階位（2026-09-15〜こちらが正）
         json.dump(lad, open(os.path.join(WORK, f"vision_ladder_{label}.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
         print("梯子: " + " / ".join(f"V{lv} {r_['_通過']}/{r_['_問題数']}" for lv, r_ in summary.items()))
         print(f"  貫通段位（80% 基準）: {name}（V{lv_} まで）")

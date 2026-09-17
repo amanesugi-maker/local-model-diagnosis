@@ -55,6 +55,16 @@ REG = {
     "ornith9b_q6":        (8081, "ornith-9b-q6", {}),
     "ornith9b_q8":        (8081, "ornith-9b-q8", {}),
     "ornith9b_bf16":      (8081, "ornith-9b-bf16", {}),
+    # 2026-09-16 3060 12GB に載る候補（9B / 12B / 27B / 30B を12GBの枠で比べる）
+    "qwen9b_q5":          (8081, "qwen38-9b-q5", {}),
+    "qwen9b_hui_q4":      (8081, "qwen38-9b-hui-q4", {}),
+    "gemma4_hui_q5":      (8081, "gemma4-hui-q5", {}),
+    "huihui27b_iq2s":     (8081, "huihui27b-iq2s", {}),
+    "glimmer30b_iq2xxs":  (8081, "glimmer30b-iq2xxs", {}),
+    # 2026-09-16 Ornith-1.5-9B 公式Q5 と無検閲3種（手術した人が全員違う）
+    "ornith9b_unc_q5":    (8081, "ornith9b-unc-q5", {}),
+    "ornith9b_hui_q5":    (8081, "ornith9b-hui-q5", {}),
+    "ornith9b_her_q5":    (8081, "ornith9b-her-q5", {}),
 }
 
 # (短い名, 出来上がるファイル, スクリプト, 追加の引数)

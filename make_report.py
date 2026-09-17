@@ -283,7 +283,7 @@ DEFS = {   # ⑥ 各軸の定義（脚注）
 
 def personality_text(d: dict) -> list[str]:
     """③ 性格の詳しい解説。段落のリストを返す。"""
-    v = d["v"]; tk = type_key(v); g = lambda k: v.get(k)
+    v = d["v"]; tk = type_key(v, d); g = lambda k: v.get(k)
     ls = [tk[0], tk[1], tk[2], tk[3], tk[4]]
     hk = dict((k, ok) for k, ok in d.get("honestK", []))
     fell = d.get("fell", {})
@@ -350,31 +350,61 @@ def wrap_jp(text: str, width: int) -> list[str]:
     return lines
 
 
-def group_notes(v: dict) -> list[str]:
+def group_notes(v: dict, d: dict | None = None) -> list[str]:
     """4つのまとまりを1行ずつ。2〜3軸を合わせて「だからどうなる」を言う。
-    軸が未測定なら、その旨だけ書いて推測しない。"""
+
+    2026-09-16: 判定の根拠を**十文字と同じもの**に揃えた。性格5軸は漢字、性能5軸は
+    階位（達成した分野の数）で見る。百分率の閾値で別に判定していたため、
+    「自制心の文字は制なのに、特徴欄は確認をやめられないと書く」という矛盾が出ていた。
+    分野方式の結果が無い古い診断書は、従来どおり閾値で判定する。
+    """
     g = lambda k: v.get(k)
+    dom = (d or {}).get("dom", {})
+
+    def mark(k):
+        """性格軸の漢字（無ければ None）。"""
+        o = dom.get(k)
+        return o.get("文字") if o else None
+
+    def got(k):
+        """性能軸の達成した分野の数（無ければ None）。"""
+        o = dom.get(k)
+        return o.get("達成数") if o else None
+
     out = []
 
     # ① 無検閲の画像判定（画像認識＋無検閲度）＝うちで一番効く組み合わせ
     vi, op = g("vision"), g("open")
+    vn, om = got("vision"), mark("open")
     if vi is None:
         out.append("画像認識が未測定。画像を渡す仕事は試してから決める")
-    elif vi >= 80 and (op or 0) >= 95:
-        out.append(f"画像 {vi:.0f}% × 無検閲 {op:.0f}%：読めて、題材でも断らない。外に出せない資料の判定を任せられる")
-    elif vi >= 80:
-        out.append(f"画像 {vi:.0f}% × 無検閲 {op:.0f}%：読めるが題材で断ることがある。判定させる資料を選ぶ")
-    elif (op or 0) >= 95:
-        out.append(f"画像 {vi:.0f}% × 無検閲 {op:.0f}%：断らないが画像は当てにならない。文字に起こしてから渡す")
     else:
-        out.append(f"画像 {vi:.0f}% × 無検閲 {op:.0f}%：画像の判定には向かない")
+        # 画像は達成3分野以上（鷹目より上）を「読める」とする。漢字が無い古い版は80%で判定
+        see = (vn >= 3) if vn is not None else (vi >= 80)
+        free = (om == "開") if om else ((op or 0) >= 95)
+        head = f"画像 {vi:.0f}% × 無検閲 {op:.0f}%："
+        if see and free:
+            out.append(head + "読めて、題材でも断らない。外に出せない資料の判定を任せられる")
+        elif see:
+            out.append(head + "読めるが題材で断ることがある。判定させる資料を選ぶ")
+        elif free:
+            out.append(head + "断らないが画像は当てにならない。文字に起こしてから渡す")
+        else:
+            out.append(head + "画像の判定には向かない")
 
-    # ② 答え方の性質（正直さ・自制心・率直さ）
-    ho, ca, di = g("honest"), g("calm"), g("direct")
-    good = [n for n, x, th in (("無い物は無いと言う", ho, 70), ("答えが出たら止まる", ca, 90),
-                               ("前置きを置かない", di, 85)) if (x or 0) >= th]
-    bad = [n for n, x, th in (("無い物を埋める", ho, 70), ("確認をやめられない", ca, 90),
-                              ("前置きが長い", di, 85)) if x is not None and x < th]
+    # ② 答え方の性質（正直さ・自制心・率直さ）＝**漢字をそのまま使う**
+    PERS = (("honest", "誠", "無い物は無いと言う", "無い物を埋める", 70),
+            ("calm", "制", "答えが出たら止まる", "確認をやめられない", 90),
+            ("direct", "直", "前置きを置かない", "前置きが長い", 85))
+    good, bad = [], []
+    for k, ok_mark, yes, no, th in PERS:
+        m = mark(k)
+        x = g(k)
+        hit = (m == ok_mark) if m else (None if x is None else x >= th)
+        if hit is True:
+            good.append(yes)
+        elif hit is False:
+            bad.append(no)
     if good and not bad:
         out.append("・".join(good) + "。答え方に手がかからない")
     elif bad and not good:
@@ -384,37 +414,60 @@ def group_notes(v: dict) -> list[str]:
     else:
         out.append("答え方の3軸が未測定")
 
-    # ③ 問題解決（正答率・到達率・実作業）
+    # ③ 問題解決（正答率・到達率・コーディング）
     ru, an, co = g("rule"), g("answer"), g("code")
-    if an is not None and ru is not None and an - ru >= 30:
-        t = f"到達率 {an:.0f}% に対し正答率 {ru:.0f}%。必ず答えは返るが中身が合わない。数字は人が検算する"
-    elif (ru or 0) >= 50 and (an or 0) >= 85:
-        t = f"到達率 {an:.0f}%・正答率 {ru:.0f}%。答えまで行き、中身も合う。集計や事務処理を任せられる"
-    else:
-        t = f"到達率 {an if an is None else format(an, '.0f')}%・正答率 {ru if ru is None else format(ru, '.0f')}%"
+    rm, ag, cg = mark("rule"), got("answer"), got("code")
+    t = f"到達率 {an:.0f}%・正答率 {ru:.0f}%" if (an is not None and ru is not None) else ""
+    if ag is not None and rm is not None:
+        # 到達3分野以上＝完走者より上。正答率は漢字（規/俺）で見る
+        if ag >= 4 and rm == "規":
+            t += "。手順を踏んで答えまで行き、中身も合う。集計や事務処理を任せられる"
+        elif ag >= 4:
+            t += "。答えまでは行くが中身が合わない。出た数字は人が検算する"
+        elif rm == "規":
+            t += "。中身は合うが、手順が長いと途中で崩れる。短く切って渡す"
+        else:
+            t += "。手順も中身も崩れる。細かく区切って、都度たしかめる"
+    elif an is not None and ru is not None and an - ru >= 30:
+        t += "。必ず答えは返るが中身が合わない。数字は人が検算する"
     if co is not None:
-        t += f"。コードは {co:.0f}%"
-    out.append(t)
+        if cg is not None:
+            NAME = ("書けない", "新人", "見習い", "一人前", "熟練", "英雄")
+            t += f"。コードは {co:.0f}%（{NAME[min(cg, 5)]}）"
+            if cg == 0:
+                t += "＝仕様から組ませる仕事には向かない"
+        else:
+            t += f"。コードは {co:.0f}%"
+    out.append(t or "問題解決の3軸が未測定")
 
     # ④ 言語（読解力・日本語の質）
     lo, ja = g("long"), g("ja")
+    lg, jg = got("long"), got("ja")
     if lo is None or ja is None:
         out.append("読解力または日本語の質が未測定")
-    elif lo >= 80 and ja < 70:
-        out.append(f"読解力 {lo:.0f}% × 日本語 {ja:.0f}%：読むのは強いが、書く日本語は崩れる。下書きを書かせて人が直す")
-    elif lo >= 80 and ja >= 85:
-        out.append(f"読解力 {lo:.0f}% × 日本語 {ja:.0f}%：読めて書ける。長い資料の要約をそのまま使える")
-    elif lo < 60:
-        out.append(f"読解力 {lo:.0f}% × 日本語 {ja:.0f}%：長い資料は取り違える。短く切って渡す")
     else:
-        out.append(f"読解力 {lo:.0f}% × 日本語 {ja:.0f}%")
+        head = f"読解力 {lo:.0f}% × 日本語 {ja:.0f}%："
+        read_ok = (lg >= 4) if lg is not None else (lo >= 80)
+        read_ng = (lg <= 2) if lg is not None else (lo < 60)
+        write_ok = (jg >= 4) if jg is not None else (ja >= 85)
+        write_ng = (jg <= 2) if jg is not None else (ja < 70)
+        if read_ok and write_ng:
+            out.append(head + "読むのは強いが、書く日本語は崩れる。下書きを書かせて人が直す")
+        elif read_ok and write_ok:
+            out.append(head + "読めて書ける。長い資料の要約をそのまま使える")
+        elif read_ng:
+            out.append(head + "長い資料は取り違える。短く切って渡す")
+        elif write_ng:
+            out.append(head + "読み取りはそこそこだが、書く日本語は崩れる。清書は人がやる")
+        else:
+            out.append(head + "読み書きとも中位。下書きには使える")
     return out
 
 
 def personality_lines(d: dict, width: int = 29) -> list[tuple[str, str]]:
     """③ 性格の解説。
     種別 h=見出し・b=箇条書きの1行目・c=続き行。"""
-    v = d["v"]; tk = type_key(v); g = lambda k: v.get(k)
+    v = d["v"]; tk = type_key(v, d); g = lambda k: v.get(k)
     # 2026-09-09: 鍵の3文字目は自制心（旧: 回答率）。到達率は鍵に無いので点数で直接判定する。
     L = {"honest": tk[0], "rule": tk[1], "calm": tk[2], "open": tk[3], "direct": tk[4]}
     L["answer"] = "C" if (g("answer") or 0) >= 50 else "Q"
@@ -449,39 +502,62 @@ def personality_lines(d: dict, width: int = 29) -> list[tuple[str, str]]:
     if (g("code") or 0) >= 70:
         strengths.append("依頼したコードがだいたい一発で動く")
     # 2026-09-09 追加: 枠に余白があったので候補を増やす（条件を満たしたものだけ出る）
-    if (g("vision") or 0) >= 80:
+    # 2026-09-16: 判定を**十文字と同じ根拠**に揃えた（漢字と階位）。
+    # 百分率の閾値で別に決めていたため、「文字は制なのに弱みに『確認をやめられない』が出る」
+    # という矛盾が残っていた。分野方式の結果が無い古い診断書は従来どおり閾値で決める。
+    dom = d.get("dom", {})
+    mk = lambda k: (dom.get(k) or {}).get("文字")
+    gt = lambda k: (dom.get(k) or {}).get("達成数")
+
+    def hi(k, th):
+        """その軸が良い側か。漢字があればそれで、無ければ百分率の閾値で。"""
+        m = mk(k)
+        if m:
+            return m == PERSONA_MARKS_HI[k]
+        x = g(k)
+        return None if x is None else x >= th
+
+    def lv(k, n):
+        """性能軸が n 分野以上か。階位が無ければ None。"""
+        c = gt(k)
+        return None if c is None else c >= n
+
+    # ── 強み ──
+    if (lv("vision", 3) if gt("vision") is not None else (g("vision") or 0) >= 80):
         strengths.append("画像の中の文字を読める。書類の写真やスクリーンショットを渡せる")
-    if (g("direct") or 0) >= 85:
+    if hi("direct", 85):
         strengths.append("前置きを付けずに答えから入る。往復の回数が少なくて済む")
-    if (g("ja") or 0) >= 85:
+    if (lv("ja", 4) if gt("ja") is not None else (g("ja") or 0) >= 85):
         strengths.append("日本語が崩れない。字数や語句の指定にも付いてくる")
-    if (g("answer") or 0) >= 85 and (g("calm") or 0) >= 90:
+    _an = lv("answer", 4) if gt("answer") is not None else (g("answer") or 0) >= 85
+    if _an and hi("calm", 90):
         strengths.append("投げた仕事が必ず返ってきて、途中で固まらない。放っておける")
-    if (g("honest") or 0) >= 70 and (g("open") or 0) >= 95:
+    if hi("honest", 70) and hi("open", 95):
         strengths.append("断らないのに嘘もつかない。聞きにくいことをそのまま聞ける")
-    if (g("rule") or 100) < 50:
+
+    # ── 弱み ──
+    if hi("rule", 50) is False:
         weaknesses.append("金額・在庫・件数の処理は間違える。出た数字は必ず人が検算する")
-    if (g("long") or 100) < 60:
+    if (lv("long", 3) is False if gt("long") is not None else (g("long") or 100) < 60):
         weaknesses.append("長い記録では数え間違いや取り違えがある。件数や履歴は二重に確認する")
-    if (g("honest") or 100) < 70:
+    if hi("honest", 70) is False:
         weaknesses.append("知らないことを埋めてしまう。資料に無い質問はしない")
-    if (g("answer") or 100) < 70:
+    if (lv("answer", 3) is False if gt("answer") is not None else (g("answer") or 100) < 70):
         weaknesses.append("長い手順は途中で止まる。小分けにして渡す")
-    if (g("direct") or 100) < 85:
+    if hi("direct", 85) is False:
         weaknesses.append("前置きが長い。「答えから書いて」と添えると速い")
-    if (g("ja") or 100) < 85:
+    if (lv("ja", 3) is False if gt("ja") is not None else (g("ja") or 100) < 85):
         weaknesses.append("字数や文体の指定を外しやすい。出力後に指定を確認する")
-    if (g("code") or 100) < 70 and g("code") is not None:
+    _cg = gt("code")
+    if (_cg is not None and _cg <= 2) or (_cg is None and g("code") is not None and g("code") < 70):
         weaknesses.append("境界条件のあるコードは手直しが要る。空・端・重複の入力で試す")
-    if (g("vision") or 100) < 80 and g("vision") is not None:
+    if (lv("vision", 3) is False if gt("vision") is not None
+            else (g("vision") is not None and g("vision") < 80)):
         weaknesses.append("小さい文字や傾いた画像は読み違える。重要な文字は人が確認する")
-    # 2026-09-09 追加
-    if (g("calm") or 100) < 90:
+    if hi("calm", 90) is False:
         weaknesses.append("同じ確認を繰り返して終わらなくなる。区切って渡し、途中を見る")
-    if (g("open") or 100) < 95:
+    if hi("open", 95) is False:
         weaknesses.append("際どい題材は断ることがある。言い換えるより別のモデルへ回すほうが速い")
-    if (g("rule") or 100) < 30:
-        weaknesses.append("条件が3つ以上並ぶと守れない。1つずつに分けて頼む")
     out = [("h", "性格")]
     for k, *_ in AXES:
         if k in items:
@@ -489,7 +565,7 @@ def personality_lines(d: dict, width: int = 29) -> list[tuple[str, str]]:
                 out.append(("b" if i == 0 else "c", line))
     # 強み・弱みは下の「向く作業／不向きな作業」と内容が重なるので3件ずつに減らす
     out.append(("h", "複数の軸での性格"))
-    for t in group_notes(v):
+    for t in group_notes(v, d):
         for i, line in enumerate(wrap_jp(t, width)):
             out.append(("b" if i == 0 else "c", line))
     out.append(("h", "強み（こう使うと活きる）"))
@@ -585,7 +661,10 @@ def weak_work_kinds(d: dict) -> list[str]:
     fell = d.get("fell", {})
     if (g("rule") is not None and g("rule") < 50) or any(fell.get(h) for h in ("H1", "H2", "H5", "H8a", "H8b")):
         out.append("数量や金額の計算")
-    if fell.get("H3") or fell.get("H4") or fell.get("H6"):
+    # 2026-09-16: 旧測定の落ち方（H3/H4/H6）に依存していた。今の測定器は出さないので
+    # **正答率の漢字**で決める。旧データが残っていると向くと不向きの両方に出ていた
+    if (d.get("dom", {}).get("rule") or {}).get("文字") == "俺" or (
+            not d.get("dom", {}).get("rule") and (fell.get("H3") or fell.get("H4") or fell.get("H6"))):
         out.append("規則の多い事務処理")
     if any(not ok for _, ok in d.get("honestK", [])):
         out.append("資料からの正確な読み取り")
@@ -641,13 +720,21 @@ def work_fit_detail(d: dict) -> tuple[list[tuple[str, str]], list[tuple[str, str
                     f"画像 {g('vision'):.0f}%。スクリーンショットや書類の写真から文字を拾える"))
 
     # ---- 不向きな作業 ----
-    if g("rule") is not None and g("answer") is not None and (
-            g("rule") < 50 or any(fell.get(h) for h in ("H1", "H2", "H5", "H8a", "H8b"))):
-        gap = (g("answer") or 0) - (g("rule") or 0)
-        unfit.append(("数量・金額の計算",
-                      f"正答率 {g('rule'):.0f}% に対し到達率 {g('answer'):.0f}%。"
-                      f"答えは出すが中身が合わないので、出た数字の約 {gap:.0f}% は人が検算する"))
-    if fell.get("H3") or fell.get("H4") or fell.get("H6"):
+    # 2026-09-16: 旧測定の落ち方（H1/H3…）に依存していたのをやめ、**差と漢字**で決める。
+    # 差がゼロなのに「出た数字の約 0% は人が検算する」と書く矛盾が出ていた。
+    _rm = (d.get("dom", {}).get("rule") or {}).get("文字")
+    _gap = ((g("answer") or 0) - (g("rule") or 0)) if (g("rule") is not None and g("answer") is not None) else 0
+    if g("rule") is not None and (_gap >= 15 or _rm == "俺" or (_rm is None and g("rule") < 50)):
+        if _gap >= 15:
+            why = (f"正答率 {g('rule'):.0f}% に対し到達率 {g('answer'):.0f}%。"
+                   f"答えは出すが中身が合わないので、出た数字の約 {_gap:.0f}% は人が検算する")
+        else:
+            why = f"正答率 {g('rule'):.0f}%。条件が並ぶと自己流になる。出た数字は人が検算する"
+        unfit.append(("数量・金額の計算", why))
+    # 2026-09-16: 旧測定の落ち方（H3/H4/H6）に依存していた。今の測定器は出さないので
+    # **正答率の漢字**で決める。旧データが残っていると向くと不向きの両方に出ていた
+    if (d.get("dom", {}).get("rule") or {}).get("文字") == "俺" or (
+            not d.get("dom", {}).get("rule") and (fell.get("H3") or fell.get("H4") or fell.get("H6"))):
         unfit.append(("規則の多い事務処理",
                       "取消・除外の印や、後から出た正しい値を見落とす。"
                       "できなかった分の報告も抜けやすい"))
@@ -655,32 +742,46 @@ def work_fit_detail(d: dict) -> tuple[list[tuple[str, str]], list[tuple[str, str
         unfit.append(("資料からの正確な読み取り",
                       f"正直さ {g('honest'):.0f}%。注記や但し書きを読み飛ばし、"
                       "似た項目の値で埋めることがある"))
-    if g("long") is not None and any(not ok for _, ok in d.get("longK", [])):
+    _lg = (d.get("dom", {}).get("long") or {}).get("達成数")
+    if (_lg is not None and _lg < 3) or (
+            _lg is None and g("long") is not None and any(not ok for _, ok in d.get("longK", []))):
         unfit.append(("長い記録の追跡・集計",
                       f"読解力 {g('long'):.0f}%。件数を数え違え、"
                       "古い値と新しい値を取り違える"))
-    if g("ja") is not None and (
+    _jg = (d.get("dom", {}).get("ja") or {}).get("達成数")
+    if (_jg is not None and _jg < 3) or (_jg is None and g("ja") is not None and (
             any(val == "×" for x in d.get("jaK", []) for k, val in x.items() if k != "len")
-            or g("ja") < 85):
+            or g("ja") < 85)):
         unfit.append(("字数・語句を指定した文章",
                       f"日本語 {g('ja'):.0f}%。字数の上限下限や、使う語・使わない語の指定を外しやすい"))
-    if d.get("code_rank") and d["code_rank"][0] <= 2:
+    _cg = (d.get("dom", {}).get("code") or {}).get("達成数")
+    if _cg is not None:
+        if _cg <= 2:
+            NAME = ("書けない", "新人", "見習い", "一人前", "熟練", "英雄")
+            unfit.append(("境界条件のあるコード",
+                          f"コーディング {g('code'):.0f}%（{NAME[min(_cg, 5)]}）。"
+                          "空の入力・端の値・重複が絡む依頼で落ちる。その3つで必ず試す"))
+    elif d.get("code_rank") and d["code_rank"][0] <= 2:
         unfit.append(("境界条件のあるコード",
                       f"実作業は{d['code_rank'][1]}（L{d['code_rank'][0]}まで）。"
                       "空の入力・端の値・重複が絡む依頼で落ちる。その3つで必ず試す"))
     elif g("code") is not None and d.get("codeK") and any(pts < 2 for _, _, pts in d["codeK"]):
         unfit.append(("境界条件のあるコード",
-                      f"実作業 {g('code'):.0f}%。空の入力・端の値・重複で落ちる。"
+                      f"コーディング {g('code'):.0f}%。空の入力・端の値・重複で落ちる。"
                       "その3つで必ず試す"))
-    if (g("vision") or 100) < 80 and g("vision") is not None:
+    _vg = (d.get("dom", {}).get("vision") or {}).get("達成数")
+    if (_vg is not None and _vg < 3) or (
+            _vg is None and g("vision") is not None and g("vision") < 80):
         unfit.append(("画像の細かい文字",
                       f"画像 {g('vision'):.0f}%。小さい字や傾いた画像を読み違える。"
                       "重要な数字は人が確認する"))
-    if (g("calm") or 100) < 90:
+    _cm = (d.get("dom", {}).get("calm") or {}).get("文字")
+    if (_cm == "暴") or (_cm is None and (g("calm") or 100) < 90):
         unfit.append(("任せきりの多段作業",
                       f"自制心 {g('calm'):.0f}%。同じ確認を繰り返して終わらなくなる。"
                       "区切って渡し、途中経過を見る"))
-    if (g("direct") or 100) < 85:
+    _dm = (d.get("dom", {}).get("direct") or {}).get("文字")
+    if (_dm == "説") or (_dm is None and (g("direct") or 100) < 85):
         unfit.append(("短い返答がほしい場面",
                       f"率直さ {g('direct'):.0f}%。前置きと注意書きが先に来る。"
                       "「答えから書いて」と添えると縮む"))
@@ -748,7 +849,7 @@ def title_hit(k: str, d: dict) -> int | None:
 def epithet(d: dict) -> str:
     """二つ名 = 冠 ＋ 位 ＋ 職。"""
     v = d["v"]
-    job = TYPENAME.get(type_key(v), ("（名前未作成）", ""))[0]
+    job = TYPENAME.get(type_key(v, d), ("（名前未作成）", ""))[0]
     cands = [(v[k], k) for k in CROWN_AXES if v.get(k) is not None]
     hit = title_hit("code", d)
     rank = "" if hit is None else TITLES["code"][hit]
@@ -849,20 +950,49 @@ def speed_tips(label: str, eng: str, sp: dict | None) -> list[str]:
 OLD_ORDER = ["honest", "rule", "calm", "open", "direct"]
 
 
-def type_key(v: dict) -> str:
-    """型名の鍵（旧順: 正直・遵守・回答・拒否・率直）。表示の並びが変わっても32キャラ表の鍵は動かさない。"""
+# 分野方式の「良い側」の漢字（domains.PERSONA_MARKS と同じ）
+PERSONA_MARKS_HI = {"open": "開", "honest": "誠", "calm": "制", "direct": "直", "rule": "規"}
+
+def type_key(v: dict, d: dict | None = None) -> str:
+    """型名の鍵（旧順: 正直・遵守・回答・拒否・率直）。表示の並びが変わっても32キャラ表の鍵は動かさない。
+
+    2026-09-16: **分野方式の漢字があればそれを優先**する。百分率の閾値で別に決めていたため、
+    十文字が「制」なのに性格欄が「確認をやめられない」と書く矛盾が出ていた。
+    分野方式の結果が無い古い診断書は、従来どおり閾値で決める。
+    """
     ax = {k: (L, th) for k, _, L, th, _ in AXES}
+    dom = (d or {}).get("dom", {})
     out = ""
     for k in OLD_ORDER:
         x = v.get(k); L, th = ax[k]
-        out += "?" if x is None else (L[0] if x >= th else L[1])
+        o = dom.get(k)
+        if o and o.get("文字"):
+            # 分野方式の漢字は 開/禁・誠/偽・制/暴・直/説・規/俺。前の字が「良い側」
+            hi = (PERSONA_MARKS_HI.get(k))
+            out += L[0] if o["文字"] == hi else L[1]
+        else:
+            out += "?" if x is None else (L[0] if x >= th else L[1])
     return out
 
 
-def letters(v: dict) -> list[str]:
-    """英字10文字。鍵の計算や内部の判定に使う（表示は code() を使うこと）。"""
+def letters(v: dict, d: dict | None = None) -> list[str]:
+    """英字10文字。鍵の計算や内部の判定に使う（表示は code() を使うこと）。
+
+    2026-09-16: **分野方式の漢字があればそれを優先**する。レーダー図のラベルと
+    「向く・不向き」がこれを見ているため、閾値のままだと十文字と食い違っていた
+    （自制心の十文字は「制」なのに、レーダー図のラベルが「暴」になっていた）。
+    """
+    dom = (d or {}).get("dom", {})
     out = []
     for k, _, L, th, _ in AXES:
+        o = dom.get(k)
+        if o and o.get("文字"):
+            out.append(L[0] if o["文字"] == PERSONA_MARKS_HI.get(k) else L[1])
+            continue
+        if o and o.get("階位") is not None:
+            # 性能軸は達成3分野以上を「良い側」とする
+            out.append(L[0] if (o.get("達成数") or 0) >= 3 else L[1])
+            continue
         x = v.get(k)
         out.append("?" if x is None else (L[0] if x >= th else L[1]))
     return out
@@ -915,7 +1045,7 @@ def radar_svg(v: dict, size: int = 420) -> str:
         if v.get(AXES[i][0]) is None:
             continue
         x, y = pt(i, r * val); s.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="4" fill="var(--accent)" stroke="var(--surface)" stroke-width="1.5"/>')
-    ls = letters(v)
+    ls = letters(v, d)
     for i, (k, name, *_ ) in enumerate(AXES):
         x, y = pt(i, r + 22); anchor = "middle" if abs(x - cx) < 6 else ("end" if x < cx else "start")
         s.append(f'<text x="{x:.1f}" y="{y+4:.1f}" text-anchor="{anchor}" font-family="M PLUS 1 Code,monospace" font-weight="700" font-size="13" fill="var(--ink)">{ls[i]}</text>')
@@ -925,7 +1055,7 @@ def radar_svg(v: dict, size: int = 420) -> str:
 
 
 def build(label: str) -> str:
-    d = load(label); v = d["v"]; ls = letters(v)
+    d = load(label); v = d["v"]; ls = letters(v, d)
     code = code_of(v)   # 2026-09-09: 漢字5＋数字5へ
     nm, desc = TYPENAME.get(type_key(v), ("（名前未作成）", ""))
     name, full, eng = NAMES.get(label, (label, label, ""))

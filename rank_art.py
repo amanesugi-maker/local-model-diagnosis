@@ -172,18 +172,22 @@ def tier(v: dict, total_rank: str | None = None) -> int:
     return TOTAL_RANK.get(total_rank or "", 2)
 
 
-def art_key(v: dict, total_rank: str | None = None):
-    """(rank, job) の鍵。型が決まらなければ None。"""
+def art_key(v: dict, total_rank: str | None = None, d: dict | None = None):
+    """(rank, job) の鍵。型が決まらなければ None。
+
+    2026-09-17: d（診断の結果一式）を受け取るようにした。二つ名は分野方式の漢字で
+    職を決めるのに、ここだけ古い百分率の閾値で決めていて食い違っていた。
+    """
     import make_report as M
-    ent = TYPE_TO_JOB.get(M.type_key(v))
+    ent = TYPE_TO_JOB.get(M.type_key(v, d))
     if not ent:
         return None
     return RANKS[tier(v, total_rank)], ent[1]
 
 
-def art_path(v: dict, total_rank: str | None = None):
+def art_path(v: dict, total_rank: str | None = None, d: dict | None = None):
     """段位×職の絵のパス（手元にある時だけ）。無ければ None。"""
-    k = art_key(v, total_rank)
+    k = art_key(v, total_rank, d)
     if not k:
         return None
     p = table().get(k)

@@ -109,10 +109,15 @@ def box(x, y, w, h=None, extra="") -> str:
 ART_VEIL = 0.45      # 背景に掛ける白の割合（0=そのまま・1=真っ白）。多角形を主役にするため
 
 
-def art_data_uri(v: dict, total_rank: str | None, size_px: int = 620) -> str | None:
-    """段位×職の合成絵を data URI にする。無ければ従来の透かしへ。"""
+def art_data_uri(v: dict, total_rank: str | None, size_px: int = 620,
+                 d: dict | None = None) -> str | None:
+    """段位×職の合成絵を data URI にする。無ければ従来の透かしへ。
+
+    2026-09-17: d を受け取るようにした。渡さないと職が古い百分率の閾値で決まり、
+    二つ名（分野方式の漢字で決まる）と食い違う。
+    """
     import rank_art
-    src = rank_art.art_path(v, total_rank)
+    src = rank_art.art_path(v, total_rank, d)
     if not src:
         return None
     from PIL import Image
@@ -224,8 +229,17 @@ def radar_svg(v: dict, ls: list, x: float, y: float, size: float, wm: str | None
         # 2026-09-11: 図の英字（O・T・A…）をやめ、表と同じ文字にする（Astra④）
         # 性格は漢字（開/誠/制…）、性能は0〜9の数字。表の「文字」列と1対1で対応する
         th_i = M.AXES[i][3]
-        mk = (("？" if val is None else M.KANJI[k][0 if val >= th_i else 1]) if k in M.KANJI
-              else ("？" if val is None else str(min(9, int(val // 10)))))
+        # 2026-09-16: 漢字は**渡された ls**（分野方式の判定が入っている）から引く。
+        # ここだけ閾値で決めていたため、十文字が「制」でも図のラベルが「暴」になっていた
+        if k in M.KANJI:
+            if val is None:
+                mk = "？"
+            elif i < len(ls) and ls[i] != "?":
+                mk = M.KANJI[k][0 if ls[i] == M.AXES[i][2][0] else 1]
+            else:
+                mk = M.KANJI[k][0 if val >= th_i else 1]
+        else:
+            mk = "？" if val is None else str(min(9, int(val // 10)))
         out.append(f'<text class="lb" x="{lx:.1f}" y="{ly:.1f}" text-anchor="middle" fill="{LBL}">'
                    f'{E(mk)}  {E(name)}</text>')
         out.append(f'<text class="lv" x="{lx:.1f}" y="{ly + 12.0:.1f}" text-anchor="middle" fill="{vcol}">'
@@ -238,10 +252,10 @@ def sheet(label: str) -> str:
     """診断書1枚を HTML の断片で返す（座標は make_pptx.build と同じ）。"""
     d = M.load(label)
     v = d["v"]
-    ls = M.letters(v)
+    ls = M.letters(v, d)
     sc = M.score(v)
     code = M.code(v, d)
-    nm, desc = M.TYPENAME.get(M.type_key(v), ("（名前未作成）", ""))
+    nm, desc = M.TYPENAME.get(M.type_key(v, d), ("（名前未作成）", ""))
     name, full, eng = M.names(label)
     sp = d.get("speed")
     RX, RW = 4.44, 2.85   #
@@ -314,9 +328,9 @@ def sheet(label: str) -> str:
     # ---- レーダー ----
     # 段位×職の鍵。絵が手元に無い（配布版の利用者）時は href 空の枠だけ出し、サイトが art/<rank>/<job>.jpg を差し込む
     import rank_art
-    art_key = rank_art.art_key(v, sc.get("rank"))
+    art_key = rank_art.art_key(v, sc.get("rank"), d)
     a(f'<div class="radarbox" data-art="{art_key[0] + "/" + art_key[1] if art_key else ""}" style="{box(0.308, 0.68, 3.78, 3.78)}">'
-      f'{radar_svg(v, ls, 0.308, 0.68, 3.78, (art_data_uri(v, sc.get("rank")) or "") if (WATERMARK and art_key) else None)}</div>')
+      f'{radar_svg(v, ls, 0.308, 0.68, 3.78, (art_data_uri(v, sc.get("rank"), d=d) or "") if (WATERMARK and art_key) else None)}</div>')
 
     # ---- 性格（本文）----
     # 行数が多い型では字を自動で縮める

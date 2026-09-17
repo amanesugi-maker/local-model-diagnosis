@@ -253,10 +253,10 @@ def sheet(label: str, out_dir: str) -> str:
     import rank_art
     d = M.load(label)
     sc = M.score(d["v"])
-    k = rank_art.art_key(d["v"], sc.get("rank"))
+    k = rank_art.art_key(d["v"], sc.get("rank"), d)
     name, full, eng = M.names(label)
     j = {"format": "lmd-sheet/1", "label": label, "name": full, "code": M.code(d["v"], d),
-         "epithet": M.epithet(d), "desc": M.TYPENAME.get(M.type_key(d["v"]), ("", ""))[1],
+         "epithet": M.epithet(d), "desc": M.TYPENAME.get(M.type_key(d["v"], d), ("", ""))[1],
          "score": sc.get("scaled"), "rank": sc.get("rank"),
          "art": {"rank": k[0], "job": k[1]} if k else None, "html": S.sheet(label)}
     io.open(os.path.join(out_dir, f"診断書_{label}.json"), "w", encoding="utf-8").write(

@@ -411,6 +411,10 @@ def sheet(label: str) -> str:
             mean = "".join(
                 ("" if i == 0 else "／") + (f'<b>{E(t)}</b>' if i == hit else E(t))
                 for i, t in enumerate(M.TITLES[k]))
+        # 2026-09-18 本人指示: コーディング・日本語の質・画像認識は
+        # 実測の内訳ではなく固定の副題を出す
+        if k in ("code", "vision", "ja"):
+            dsc = AXD[k][1]
         tr.append(
             f'<tr style="height:{px(0.295)};background:{GC[kpos[k]]}">'
             f'<td class="mk{"" if persona else " num"}">{mark}</td>'
